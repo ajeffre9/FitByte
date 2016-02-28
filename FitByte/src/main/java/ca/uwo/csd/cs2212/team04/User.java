@@ -9,14 +9,6 @@ import java.util.Date;
  */
 public class User {
 
-    //Attributes for settings class
-
-//    private Date date; //Not sure if the is is teh right one
-//    private WindowsBorders.DashedBorder dashborad;
-//    private ColorTheme colorTheme;
-//    private DailyGoals DailyGOals;
-//    private CustomGoals CustomGoals;
-
     private String name, gender, hobby;
     private double weight, height;
     private int age;

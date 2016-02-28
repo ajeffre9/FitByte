@@ -5,13 +5,12 @@ package ca.uwo.csd.cs2212.team04;
  */
 public class Settings {
 
-    private Object date, dashborad, colorTheme, dailyGoals, CustomGoals;
+    private Object User,date, dashborad, colorTheme, dailyGoals, CustomGoals;
 
-    public void Strings(){
+    public Settings(){
         date = null;
         dashborad = null;
         colorTheme = null;
         dailyGoals = null;
-
     }
 }

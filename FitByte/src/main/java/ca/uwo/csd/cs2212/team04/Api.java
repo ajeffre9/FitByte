@@ -225,7 +225,11 @@ public class Api
 
     public static void main(String[] args){
 
-        getInfo("activities/floors/date/2016-01-07/1d/1min/time/19:15/19:30.json");
+        //getInfo("activities/floors/date/2016-01-07/1d/1min/time/19:15/19:30.json");
+        //getInfo("activities/tracker/steps/date/2016-01-07/today/1d.json");
+        //getInfo("body/log/weight/date/today.json");
+       // getInfo("activities/date/today.json");
+        getInfo("profile.json");
 
     }
 
