@@ -5,10 +5,23 @@ import org.json.JSONObject;
 /**
  * Created by owner on 2016-02-28.
  */
-public class Userdata {
+public class Userdata extends Api {
 
-    private JSONObject currentData;
-    private String Activities;
+    private JSONObject activities;
 
+    public Userdata(){
+        activities = null;
+    }
+
+    public void setActivities(){
+        activities =  getInfo("activities/date/today.json");
+    }
+
+    public static void main (String args[]){
+
+        Userdata temp = new Userdata();
+        temp.setActivities();
+
+    }
 
 }

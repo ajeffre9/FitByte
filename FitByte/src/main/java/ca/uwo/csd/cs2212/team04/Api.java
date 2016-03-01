@@ -27,7 +27,7 @@ public class Api
     private static String CALL_BACK_URI="http://localhost:8080";
     private static int CALL_BACK_PORT=8080;
 
-    public static void getInfo(String requestedURL)
+    public static JSONObject getInfo(String requestedURL)
     {
         //read credentials from a file
         BufferedReader bufferedReader=null;
@@ -141,10 +141,14 @@ public class Api
         System.out.println("HTTP response code: "+response.getCode());
         int statusCode = response.getCode();
 
+        JSONObject jsonObj = null;
+
         switch(statusCode){
             case 200:
                 System.out.println("Success!");
                 System.out.println("HTTP response body:\n"+response.getBody());
+                jsonObj = new JSONObject(response.getBody());
+
                 break;
             case 400:
                 System.out.println("Bad Request - may have to talk to Beth");
@@ -221,6 +225,8 @@ public class Api
                         "Error closing file\n"+e.getMessage());
             }
         }//end try
+        //System.out.println(response.getBody());
+        return jsonObj;
     }//end main
 
     public static void main(String[] args){
@@ -234,7 +240,6 @@ public class Api
         getInfo("activities/date/today.json");
 //        getInfo("profile.json");
         getInfo("activities/goals/weekly.json");
-
 
     }
 
