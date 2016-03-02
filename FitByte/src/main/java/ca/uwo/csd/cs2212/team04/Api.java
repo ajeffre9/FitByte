@@ -1,4 +1,5 @@
 package ca.uwo.csd.cs2212.team04;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -7,21 +8,27 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import com.github.scribejava.apis.FitbitApi20;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.oauth.OAuthService;
 import com.github.scribejava.core.model.*; //Request Verb
 import com.github.scribejava.core.oauth.OAuth20Service;
 import com.github.scribejava.apis.service.FitbitOAuth20ServiceImpl;
+
 import java.awt.Desktop;
 import java.net.URI;
+
 import org.json.JSONObject;
 import org.json.JSONArray;
+
 /**
  * Example of using access/refresh pair, and authorization credentials
  */
+
 public class Api
 {
     private static String CALL_BACK_URI="http://localhost:8080";
@@ -31,6 +38,7 @@ public class Api
     {
         //read credentials from a file
         BufferedReader bufferedReader=null;
+
         // This will reference one line at a time
         String line = null;
 
@@ -226,9 +234,9 @@ public class Api
     public static void main(String[] args){
 
         //getInfo("activities/floors/date/2016-01-07/1d/1min/time/19:15/19:30.json");
-        //getInfo("activities/tracker/steps/date/2016-01-07/today/1d.json");
+        getInfo("activities/tracker/steps/date/2016-01-07/today/1d.json");
         //getInfo("body/log/weight/date/today.json");
-       // getInfo("activities/date/today.json");
+        getInfo("activities/date/today.json");
         getInfo("profile.json");
 
     }
