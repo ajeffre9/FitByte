@@ -237,9 +237,10 @@ public class Api
 //        getInfo("activities/floors/date/2016-01-07/1d/1min/time/19:15/19:30.json");
 //        getInfo("activities/tracker/steps/date/2016-01-07/today/1d.json");
 //        getInfo("body/log/weight/date/today.json");
-        getInfo("activities/date/today.json");
+//        getInfo("activities/date/today.json");
 //        getInfo("profile.json");
-        getInfo("activities/goals/weekly.json");
+        getInfo("activities/minutesSedentary/date/today/1d.json");
+        getInfo("activities/tracker/minutesSedentary/date/today/1d.json");
 
     }
 
