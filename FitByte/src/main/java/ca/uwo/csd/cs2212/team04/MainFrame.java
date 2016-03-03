@@ -76,10 +76,11 @@ public class MainFrame {
 	 */
 	public MainFrame(boolean fakeData) {
 		// initialize the contents of the frame
-		initialize(fakeData);
+		newSession = new Userdata(fakeData);
+		initialize();
 		// add a clock on the panel
 		clock();
-		newSession = new Userdata();
+
 
 	}
 
@@ -119,7 +120,7 @@ public class MainFrame {
 	/**
 	 * initialize method initializes the contents of the frame.
 	 */
-	private void initialize(Boolean fakeData) {
+	private void initialize() {
 		//Constructs a new frame with default bound data and be able to exit
 		frame = new JFrame();
 		frame.setBounds(100, 100, 694, 442);
@@ -169,7 +170,7 @@ public class MainFrame {
 		
 		//Creates a JLabel object Stepcount with the specified text:"Step"
 		//Add 07icon image to the label, add it to the panel and set at proper position
-		JLabel Stepcount = new JLabel("Step");
+		JLabel Stepcount = new JLabel("");
 		// Image img = new ImageIcon(this.getClass().getResource("/07icon.jpg")).getImage();
 		// Stepcount.setIcon(new ImageIcon(img));
 		Stepcount.setBounds(51, 79, 100, 100);
@@ -213,44 +214,44 @@ public class MainFrame {
 		
 		//Creates a JLabel object lblStep with context "Step"
 		//add it to the panel and set at proper position
-		JLabel lblStep = new JLabel("Step");
+		JLabel lblStep = new JLabel("Steps: " +newSession.getSteps());
 		lblStep.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		lblStep.setBounds(61, 176, 60, 35);
+		lblStep.setBounds(51, 155, 100, 100);
 		Dashboard.add(lblStep);
 		
 		//Creates a JLabel object lblSMinute with context "SMinute"
 		//add it to the panel and set at proper position
-		JLabel lblSMinute = new JLabel("SMinute");
+		JLabel lblSMinute = new JLabel("SMinute: " +newSession.getMinutesSedentary());
 		lblSMinute.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		lblSMinute.setBounds(171, 155, 60, 35);
+		lblSMinute.setBounds(171, 155, 100, 100);
 		Dashboard.add(lblSMinute);
 		
 		//Creates a JLabel object lblDistance with context "Distance"
 		//add it to the panel and set at proper position
-		JLabel lblDistance = new JLabel("Distance");
+		JLabel lblDistance = new JLabel("Distance: " +newSession.getDistance());
 		lblDistance.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		lblDistance.setBounds(295, 180, 60, 35);
+		lblDistance.setBounds(295, 180, 200,200);
 		Dashboard.add(lblDistance);
 		
 		//Creates a JLabel object lblAMinute with context "AMinute"
 		//add it to the panel and set at proper position
-		JLabel lblAMinute = new JLabel("AMinute");
+		JLabel lblAMinute = new JLabel("AMinute: " +newSession.getMinutesFairlyActive());
 		lblAMinute.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		lblAMinute.setBounds(295, 320, 60, 35);
+		lblAMinute.setBounds(295, 320, 100,100);
 		Dashboard.add(lblAMinute);
 		
 		//Creates a JLabel object lblCalories with context "Calories"
 		//add it to the panel and set at proper position
-		JLabel lblCalories = new JLabel("Calories");
+		JLabel lblCalories = new JLabel("Calories: " +newSession.getDailyCalories());
 		lblCalories.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		lblCalories.setBounds(171, 337, 60, 35);
+		lblCalories.setBounds(150, 320, 100,100);
 		Dashboard.add(lblCalories);
 		
 		//Creates a JLabel object lblFloor with context "Floor"
 		//add it to the panel and set at proper position
-		JLabel lblFloor = new JLabel("Floor");
+		JLabel lblFloor = new JLabel("Floor: " +newSession.getFloors());
 		lblFloor.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		lblFloor.setBounds(51, 320, 60, 35);
+		lblFloor.setBounds(51, 320, 100,100);
 		Dashboard.add(lblFloor);
 		
 		//Creates a JLabel object lblStep with context "Step"

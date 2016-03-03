@@ -8,32 +8,55 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by owner on 2016-02-28.
+ * User Data class that uses the API to get data from the server
+ * @author cs2212_w2016_team04
  */
 public class Userdata extends Api implements Serializable {
 
     private JSONObject temp;
-    private double dailyCalories, dailyCaloriesBMR;
+    private double dailyCalories, dailyCaloriesBMR, distance;
     private int steps, floors, minutesSedentary, minutesLightlyActive, minutesFairlyActive, minutesVeryActive, elevation;
     private String date;
 
     /**
-     * Constructor: Initialize variables and request data
+     * Constructor: Initialize variables using test data or requests data.
+     * If fakeData is true then pass test data.
+     * @param fakeData
      */
-    public Userdata(){
-        temp = null;
-        date = null;
-        dailyCalories = 0;
-        dailyCaloriesBMR = 0;
-        elevation = 0;
-        steps = 0;
-        floors = 0;
-        minutesSedentary = 0;
-        minutesLightlyActive = 0;
-        minutesFairlyActive = 0;
-        minutesVeryActive = 0;
-        this.setDate();
-        this.refreshData();
+    public Userdata(boolean fakeData){
+
+        if(fakeData){
+
+            temp = null;
+            date = null;
+            dailyCalories = 1027;
+            dailyCaloriesBMR = 60;
+            elevation = 50;
+            steps = 1500;
+            floors = 30;
+            minutesSedentary = 1000;
+            minutesLightlyActive = 90;
+            minutesFairlyActive = 5;
+            minutesVeryActive = 50;
+            distance = 60.0;
+
+        }else {
+
+            temp = null;
+            date = null;
+            dailyCalories = 0;
+            dailyCaloriesBMR = 0;
+            elevation = 0;
+            steps = 0;
+            floors = 0;
+            minutesSedentary = 0;
+            minutesLightlyActive = 0;
+            minutesFairlyActive = 0;
+            minutesVeryActive = 0;
+            distance = 0;
+            this.setDate();
+            this.refreshData();
+        }
 
     }
 
@@ -70,8 +93,8 @@ public class Userdata extends Api implements Serializable {
     }
 
     /**
-     *
-     * @return
+     * Get the Users current Calorie value
+     * @return dailyCalories
      */
     public double getDailyCalories(){
         return dailyCalories;
@@ -234,6 +257,22 @@ public class Userdata extends Api implements Serializable {
 
     }
 
+    public double getDistance() {
+        return distance;
+    }
+
+    /**
+     *  Request MinutesVeryActive data at this point in time from API and set the value
+     */
+    public void setDistance() {
+
+        temp =  getInfo("activities/tracker/distance/date/" +getDate() +"/1d.json");
+        JSONArray array = temp.getJSONArray("activities-tracker-distance");
+        distance += array.getJSONObject(0).getDouble("value");
+        System.out.println(distance);
+
+    }
+
     /**
      *  Refreshes User data
      */
@@ -248,12 +287,18 @@ public class Userdata extends Api implements Serializable {
         this.setMinutesVeryActive();
         this.setMinutesLightlyActive();
         this.setSteps();
+        this.setDistance();
 
     }
 
+    /**
+     * Main class that is used to chek whether the code works
+     * @param args
+     */
     public static void main (String args[]){
 
-        Userdata temp1 = new Userdata();
+        Userdata temp1 = new Userdata(false);
+        System.out.println(temp1.getSteps());
 
     }
 

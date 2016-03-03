@@ -7,6 +7,7 @@ package ca.uwo.csd.cs2212.team04;
  * Application parameters that determine the general layout of the GUI and 
  * hold information pretaining to specific user. Previous sessions are stored
  * in a settings.config file to allow data to live beyond a single session.
+ * @author cs2212_w2016_team04
  */
 
 import java.io.ObjectOutputStream;

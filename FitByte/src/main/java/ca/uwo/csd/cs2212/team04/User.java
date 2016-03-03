@@ -1,11 +1,8 @@
 package ca.uwo.csd.cs2212.team04;
 
-import com.sun.java.swing.plaf.windows.WindowsBorders;
-
-import java.util.Date;
-
 /**
- * Created by owner on 2016-02-17.
+ * This is the User class
+ * @author cs2212_w2016_team04
  */
 public class User {
 
@@ -25,21 +22,38 @@ public class User {
         lifeGoals = null;
     }
 
+    /**
+     * return the users name
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Setting the Users name using the name that has been passed
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Getting the Users Gender
+     * @return gender
+     */
     public String getGender() {
         return gender;
     }
 
+    /**
+     * Setting the Users gender
+     * @param gender
+     */
     public void setGender(String gender) {
         this.gender = gender;
     }
+
 
     public String getHobby() {
         return hobby;

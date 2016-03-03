@@ -27,6 +27,7 @@ import org.json.JSONArray;
 
 /**
  * Example of using access/refresh pair, and authorization credentials
+ * @author cs2212_w2016_team04
  */
 
 public class Api
@@ -149,6 +150,7 @@ public class Api
         System.out.println("HTTP response code: "+response.getCode());
         int statusCode = response.getCode();
 
+        //initialize
         JSONObject jsonObj = null;
 
         switch(statusCode){
