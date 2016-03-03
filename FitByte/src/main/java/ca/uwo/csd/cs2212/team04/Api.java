@@ -52,13 +52,13 @@ public class Api
             // File with service credentials.
 
             FileReader fileReader =
-                    new FileReader("api_credentials/Team4Credentials.txt");
+                    new FileReader("FitByte/src/main/resources/Team4Credentials.txt");
             bufferedReader = new BufferedReader(fileReader);
             clientID= bufferedReader.readLine();
             apiKey= bufferedReader.readLine();
             apiSecret = bufferedReader.readLine();
             bufferedReader.close();
-            fileReader = new FileReader("api_credentials/Team4Tokens.txt");
+            fileReader = new FileReader("FitByte/src/main/resources/Team4Tokens.txt");
             bufferedReader = new BufferedReader(fileReader);
 
             accessTokenItself = bufferedReader.readLine();
@@ -193,7 +193,7 @@ public class Api
         try {
             FileWriter fileWriter;
             fileWriter =
-                    new FileWriter("api_credentials/Team4Tokens.txt");
+                    new FileWriter("FitByte/src/main/resources/Team4Tokens.txt");
             bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.write(accessToken.getToken());
             bufferedWriter.newLine();
