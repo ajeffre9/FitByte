@@ -45,6 +45,9 @@ public class App implements Serializable {
 	 *
 	 * @param  args array of input strings provided by the user at run time
 	 */
+
+	private static boolean fakeData;
+
 	public static void main(String[] args) throws Exception {
 
 		Settings settings;		// settings required for loading GUI
@@ -52,12 +55,15 @@ public class App implements Serializable {
 		Api api;				// access to Fitbit API
 		//Test test;			// mock Fitbit API for testing
 
+		fakeData = false;
+
 		// Read whether input arguments are present for test case
 		if (args.length >= 1) {
 			if (args[0].equals("test")) {
 				System.err.println("Application is in test mode: " +
 						"access to Fitbit API has been " +
 						"restricted for this session.");
+				fakeData = true;
 			}
 		}
 
@@ -102,7 +108,7 @@ public class App implements Serializable {
 			 */
 			public void run() {
 				try {
-					MainFrame window = new MainFrame();
+					MainFrame window = new MainFrame(fakeData);
 					window.frame.setVisible(true);
 				}
 				// catch the exception, and prints this throwable and 

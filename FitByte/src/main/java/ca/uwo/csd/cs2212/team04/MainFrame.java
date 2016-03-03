@@ -47,6 +47,7 @@ public class MainFrame {
 	private JTextField txtDailyGoal;
 	private JTextField txtEditTheLook;
 	private JTextField txtYearMonthDay;
+	private Userdata newSession;
 
 	/**
 	 * Launch the application.
@@ -73,11 +74,13 @@ public class MainFrame {
 	/**
 	 * Constructor creates MainFrame object
 	 */
-	public MainFrame() {
+	public MainFrame(boolean fakeData) {
 		// initialize the contents of the frame
-		initialize();
+		initialize(fakeData);
 		// add a clock on the panel
 		clock();
+		newSession = new Userdata();
+
 	}
 
 	/**
@@ -116,7 +119,7 @@ public class MainFrame {
 	/**
 	 * initialize method initializes the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize(Boolean fakeData) {
 		//Constructs a new frame with default bound data and be able to exit
 		frame = new JFrame();
 		frame.setBounds(100, 100, 694, 442);
@@ -533,7 +536,7 @@ public class MainFrame {
 			 * actionPerformed method useded to exit the application
 			 * @param e A semantic event which indicates that a component-defined action occurred
 			 */
-			@Override
+			//@Override
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
