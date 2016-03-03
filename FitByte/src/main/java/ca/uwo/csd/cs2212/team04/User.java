@@ -14,7 +14,7 @@ public class User {
     private int age;
     private Object dailyGoals, lifeGoals, address;
 
-    public void User(){
+    public User(){
         name = null;
         gender =null;
         hobby = null;
