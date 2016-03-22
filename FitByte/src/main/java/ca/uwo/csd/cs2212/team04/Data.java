@@ -26,45 +26,53 @@ public class Data implements Serializable {
 	 * Application parameters
 	 *
 	 */
-	Date date;
-	String name;
 
-	/**
-	 * Default constructor for the data class.
+	public int windowHeight, windowWidth;
+	public int windowPositionX, windowPositionY;
+	public String colorTheme, dashboard;
+	public User user;
+	public Date date;
+
+
+	/*
+	 * Default constructor for the data class. Only called if no previous
+	 * settings exist. Settings from a current session are stored in a custom
+	 * serialized file labelled 'settings.config'. Sets all to default.
 	 *
 	 */
-	public Data(String name) {
-		date = new Date();			// Enter todays date
-		this.name = name; 		// Test purposes only
+	public Data() {
+
+		windowHeight 	= 400;			// Default window height
+		windowWidth 	= 400;			// Default window width
+		windowPositionX = 400;			// Default window x position
+		windowPositionY = 400;			// Default window y position
+		colorTheme 		= "default";	// Default windows color theme
+		dashboard  		= "default";	// Default dashboard configuration
+
+		//user = new User();			// Create a new user
+		date = new Date();				// Select today as default date
+
 	}
 
 
-	/**
-	 * Write data to file through serialization
-	 *
-	 * @param filename		Filename for the data file to write
-	 */
-	public void write(String filename) {
+	// /**
+	//  * Write data to file through serialization
+	//  *
+	//  * @param filename		Filename for the data file to write
+	//  */
+	// public void write(String filename) {
 
-		try {
-	      	ObjectOutputStream out = new ObjectOutputStream(
-                                     new FileOutputStream(filename + ".data"));
-	      	out.writeObject(this);
-	      	out.close();
+	// 	try {
+	//       	ObjectOutputStream out = new ObjectOutputStream(
+ //                                     new FileOutputStream(filename + ".data"));
+	//       	out.writeObject(this);
+	//       	out.close();
 
-		} catch (Exception e) {
-			System.err.println(e + ": failed to save settings");
-		}
-	}
+	// 	} catch (Exception e) {
+	// 		System.err.println(e + ": failed to save settings");
+	// 	}
+	// }
 
-	/**
-	 * Print number for test purposes
-	 *
-	 */
-	public void print() {
-
-		System.err.println(name);
-	}
 
 }
 ////////////////////////////////////////////////////////////////////////////////

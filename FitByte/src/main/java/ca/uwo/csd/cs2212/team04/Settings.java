@@ -12,6 +12,8 @@ package ca.uwo.csd.cs2212.team04;
 
 import java.io.ObjectOutputStream;
 import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.FileInputStream;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -24,30 +26,28 @@ public class Settings implements Serializable {
 	 * Application parameters
 	 *
 	 */
-	private int windowHeight, windowWidth;
-	private int windowPositionX, windowPositionY;
-	private String colorTheme, dashboard;
-	private User user;
-	private Date date;
-
+	private Data data;
 
 	/**
-	 * Default constructor for the settings class. Only called if no previous
-	 * settings exist. Settings from a current session are stored in a custom
-	 * serialized file labelled 'settings.config'. Sets all to default.
+	 * Default constructor for the settings class. 
 	 *
 	 */
-	public Settings() {
+	public Settings() throws Exception {
 
-		windowHeight 	= 400;			// Default window height
-		windowWidth 	= 400;			// Default window width
-		windowPositionX = 400;			// Default window x position
-		windowPositionY = 400;			// Default window y position
-		colorTheme = "default";			// Default windows color theme
-		dashboard  = "default";			// Default dashboard configuration
+		// Check for existing settings.config file
+		try {
+			ObjectInputStream in = new ObjectInputStream(
+				new FileInputStream("settings.config"));
+		
+			data = (Data) in.readObject();
+			in.close();
+		} catch (Exception e) {
+			// File not present, create a blank settings file
+			data = new Data();
+			saveSettings();
+			System.err.println("New settings file created");
+		}
 
-		//user = new User();			// Create a new user
-		date = new Date();				// Select today as default date
 
 	}
 
@@ -61,7 +61,7 @@ public class Settings implements Serializable {
 		try {
 			ObjectOutputStream out = new ObjectOutputStream(
 					new FileOutputStream("settings.config"));
-			out.writeObject(this);
+			out.writeObject(data);
 			out.close();
 
 		} catch (Exception e) {
@@ -76,7 +76,7 @@ public class Settings implements Serializable {
 	 * @return date		Date the settings were saved
 	 */
 	public Date getDate() {
-		return this.date;
+		return data.date;
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class Settings implements Serializable {
 	 * @return dashboard	Dashboard arrangement for the GUI
 	 */
 	public String getDashboard() {
-		return this.dashboard;
+		return data.dashboard;
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class Settings implements Serializable {
 	 * @return colorTheme	Color theme for the custom dashboard on the GUI
 	 */
 	public String getColorTheme() {
-		return this.colorTheme;
+		return data.colorTheme;
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class Settings implements Serializable {
 	 * @return user		User from current session
 	 */
 	public User getUser() {
-		return this.user;
+		return data.user;
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class Settings implements Serializable {
 	 * @return windowHeight		Window height specified by user
 	 */
 	public int getWindowHeight() {
-		return this.windowHeight;
+		return data.windowHeight;
 	}
 
 	/**
@@ -121,7 +121,7 @@ public class Settings implements Serializable {
 	 * @return windowWidth		Window width specified by user
 	 */
 	public int getWindowWidth() {
-		return this.windowWidth;
+		return data.windowWidth;
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class Settings implements Serializable {
 	 * @return windowPositionX		Window's x position on desktop
 	 */
 	public int getWindowPositionX() {
-		return this.windowPositionX;
+		return data.windowPositionX;
 	}
 
 	/**
@@ -139,7 +139,7 @@ public class Settings implements Serializable {
 	 * @return windowPositionY		Window's y position on desktop
 	 */
 	public int getWindowPositionY() {
-		return this.windowPositionY;
+		return data.windowPositionY;
 	}
 
 	/**
@@ -148,7 +148,7 @@ public class Settings implements Serializable {
 	 * @param date			Date passed into by user
 	 */
 	public void setDate(Date date) {
-		this.date = date;
+		data.date = date;
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class Settings implements Serializable {
 	 * @param dashboard String passed in by user
 	 */
 	public void setDashboard(String dashboard) {
-		this.dashboard = dashboard;
+		data.dashboard = dashboard;
 	}
 
 	/**
@@ -166,7 +166,7 @@ public class Settings implements Serializable {
 	 * @param colorTheme	String passed into by user
 	 */
 	public void setColorTheme(String colorTheme) {
-		this.colorTheme = colorTheme;
+		data.colorTheme = colorTheme;
 	}
 
 	/**
@@ -175,7 +175,7 @@ public class Settings implements Serializable {
 	 * @param user		User from current session
 	 */
 	public void setUser(User user) {
-		this.user = user;
+		data.user = user;
 	}
 
 	/**
@@ -184,7 +184,7 @@ public class Settings implements Serializable {
 	 * @param windowHeight		Window height specified by user
 	 */
 	public void getWindowHeight(int windowHeight) {
-		this.windowHeight = windowHeight;
+		data.windowHeight = windowHeight;
 	}
 
 	/**
@@ -193,7 +193,7 @@ public class Settings implements Serializable {
 	 * @param windowWidth		Window width specified by user
 	 */
 	public void getWindowWidth(int windowWidth) {
-		this.windowWidth = windowWidth;
+		data.windowWidth = windowWidth;
 	}
 
 	/**
@@ -202,7 +202,7 @@ public class Settings implements Serializable {
 	 * @param windowPositionX		Window's x position on desktop
 	 */
 	public void getWindowPositionX(int windowPositionX) {
-		this.windowPositionX = windowPositionX;
+		data.windowPositionX = windowPositionX;
 	}
 
 	/**
@@ -211,7 +211,7 @@ public class Settings implements Serializable {
 	 * @param windowPositionY		Window's y position on desktop
 	 */
 	public void getWindowPositionY(int windowPositionY) {
-		this.windowPositionY = windowPositionY;
+		data.windowPositionY = windowPositionY;
 	}
 
 
