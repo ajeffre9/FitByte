@@ -64,8 +64,9 @@ public class App {
 			}
 		}
 
-		// // Load settings from previous settings		
-		// settings = new Settings();
+		// Load settings from previous settings		
+		settings = new Settings();
+		
 
 		// Initialize the graphical user interface
 		EventQueue.invokeLater(new Runnable() {

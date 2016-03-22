@@ -48,7 +48,6 @@ public class Settings implements Serializable {
 			System.err.println("New settings file created");
 		}
 
-
 	}
 
 	/**
