@@ -17,6 +17,14 @@ import java.io.FileInputStream;
 import java.io.Serializable;
 import java.util.Date;
 
+// from David
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Formatter;
+import java.util.Properties;
+import javax.swing.JOptionPane;
+
 ////////////////////////////////////////////////////////////////////////////////
 //                           Settings Class                                   //
 ////////////////////////////////////////////////////////////////////////////////
@@ -79,30 +87,12 @@ public class Settings implements Serializable {
 	}
 
 	/**
-	 * Returns the dashboard from the settings class.
-	 *
-	 * @return dashboard	Dashboard arrangement for the GUI
-	 */
-	public String getDashboard() {
-		return data.dashboard;
-	}
-
-	/**
 	 * Returns the color theme for the GUI from the settings class.
 	 *
 	 * @return colorTheme	Color theme for the custom dashboard on the GUI
 	 */
 	public String getColorTheme() {
 		return data.colorTheme;
-	}
-
-	/**
-	 * Returns the user from the settings class.
-	 *
-	 * @return user		User from current session
-	 */
-	public User getUser() {
-		return data.user;
 	}
 
 	/**
@@ -123,23 +113,38 @@ public class Settings implements Serializable {
 		return data.windowWidth;
 	}
 
-	/**
-	 * Returns the window x position from the settings class.
-	 *
-	 * @return windowPositionX		Window's x position on desktop
-	 */
-	public int getWindowPositionX() {
-		return data.windowPositionX;
+
+	// getters
+	public int getDG_Step() {
+		return data.DG_Step;
 	}
 
-	/**
-	 * Returns the window y position from the settings class.
-	 *
-	 * @return windowPositionY		Window's y position on desktop
-	 */
-	public int getWindowPositionY() {
-		return data.windowPositionY;
+	public int getDG_Distance() {
+		return data.DG_Distance;
 	}
+
+	public int getDG_SMinute() {
+		return data.DG_SMinute;
+	}
+
+	public int getDG_AMinute() {
+		return data.DG_AMinute;
+	}
+
+	public int getDG_Floor() {
+		return data.DG_Floor;
+	}
+
+	public int getDG_Calories() {
+		return data.DG_Calories;
+	}
+
+	public String getUpdate() {
+		return data.update;
+	}
+
+
+
 
 	/**
 	 * Sets the date.
@@ -151,15 +156,6 @@ public class Settings implements Serializable {
 	}
 
 	/**
-	 * Sets the dashboard configuration.
-	 *
-	 * @param dashboard String passed in by user
-	 */
-	public void setDashboard(String dashboard) {
-		data.dashboard = dashboard;
-	}
-
-	/**
 	 * Sets the color theme of the GUI dashboard.
 	 *
 	 * @param colorTheme	String passed into by user
@@ -168,49 +164,37 @@ public class Settings implements Serializable {
 		data.colorTheme = colorTheme;
 	}
 
-	/**
-	 * Sets the user from the settings class.
-	 *
-	 * @param user		User from current session
-	 */
-	public void setUser(User user) {
-		data.user = user;
+
+
+	public void setDG_Step(int dG_Step) {
+		data.DG_Step = dG_Step;
 	}
 
-	/**
-	 * Sets the window height from the settings class.
-	 *
-	 * @param windowHeight		Window height specified by user
-	 */
-	public void getWindowHeight(int windowHeight) {
-		data.windowHeight = windowHeight;
+	public void setDG_Distance(int dG_Distance) {
+		data.DG_Distance = dG_Distance;
 	}
 
-	/**
-	 * Sets the window width from the settings class.
-	 *
-	 * @param windowWidth		Window width specified by user
-	 */
-	public void getWindowWidth(int windowWidth) {
-		data.windowWidth = windowWidth;
+	public void setDG_SMinute(int dG_SMinute) {
+		data.DG_SMinute = dG_SMinute;
 	}
 
-	/**
-	 * Sets the window x position from the settings class.
-	 *
-	 * @param windowPositionX		Window's x position on desktop
-	 */
-	public void getWindowPositionX(int windowPositionX) {
-		data.windowPositionX = windowPositionX;
+	public void setDG_AMinute(int dG_AMinute) {
+		data.DG_AMinute = dG_AMinute;
 	}
 
-	/**
-	 * Sets the window y position from the settings class.
-	 *
-	 * @param windowPositionY		Window's y position on desktop
-	 */
-	public void getWindowPositionY(int windowPositionY) {
-		data.windowPositionY = windowPositionY;
+	public void setDG_Floor(int dG_Floor) {
+		data.DG_Floor = dG_Floor;
+	}
+
+	public void setDG_Calories(int dG_Calories) {
+		data.DG_Calories = dG_Calories;
+	}
+
+
+
+	public void setUpdate() {
+		Date update = new Date();
+		data.update = update.toString();
 	}
 
 

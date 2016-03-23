@@ -47,8 +47,8 @@ public class App {
 
 	public static void main(String[] args) throws Exception {
 
-		Settings settings;		// settings required for loading GUI
-		User user;				// user specific data
+		//Settings settings;		// settings required for loading GUI
+		//User user;				// user specific data
 		Api api;				// access to Fitbit API
 		//Test test;			// mock Fitbit API for testing
 
@@ -65,7 +65,8 @@ public class App {
 		}
 
 		// Load settings from previous settings		
-		settings = new Settings();
+		// settings = new Settings();
+
 
 
 		// Initialize the graphical user interface

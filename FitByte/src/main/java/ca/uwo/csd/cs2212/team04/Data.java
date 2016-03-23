@@ -28,10 +28,13 @@ public class Data implements Serializable {
 	 */
 
 	public int windowHeight, windowWidth;
-	public int windowPositionX, windowPositionY;
-	public String colorTheme, dashboard;
-	public User user;
+	public String colorTheme;
 	public Date date;
+
+	// from David
+	public int DG_Step, DG_Distance, DG_SMinute;
+	public int DG_AMinute, DG_Floor, DG_Calories;
+	public String update;
 
 
 	/*
@@ -44,35 +47,18 @@ public class Data implements Serializable {
 
 		windowHeight 	= 400;			// Default window height
 		windowWidth 	= 400;			// Default window width
-		windowPositionX = 400;			// Default window x position
-		windowPositionY = 400;			// Default window y position
 		colorTheme 		= "default";	// Default windows color theme
-		dashboard  		= "default";	// Default dashboard configuration
 
-		//user = new User();			// Create a new user
-		date = new Date();				// Select today as default date
-
+		DG_Step 		= 100;
+		DG_Distance 	= 100;
+		DG_SMinute 		= 100;
+		DG_AMinute 		= 100;
+		DG_Floor 		= 100;
+		DG_Calories 	= 100;
+	
+		date 	= new Date();
+		update 	= date.toString();
 	}
-
-
-	// /**
-	//  * Write data to file through serialization
-	//  *
-	//  * @param filename		Filename for the data file to write
-	//  */
-	// public void write(String filename) {
-
-	// 	try {
-	//       	ObjectOutputStream out = new ObjectOutputStream(
- //                                     new FileOutputStream(filename + ".data"));
-	//       	out.writeObject(this);
-	//       	out.close();
-
-	// 	} catch (Exception e) {
-	// 		System.err.println(e + ": failed to save settings");
-	// 	}
-	// }
-
 
 }
 ////////////////////////////////////////////////////////////////////////////////
