@@ -2,28 +2,24 @@ package ca.uwo.csd.cs2212.team04;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.awt.*;
 import java.io.Serializable;
 
 /**
  * still need to figure out the problem with parsing the time
  *
  */
-import java.sql.Time;
-import java.text.ParseException;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.SynchronousQueue;
 
 /**
  * Created by owner on 2016-03-23.
  */
-public class weatherData extends WeatherApi implements Serializable {
+public class WeatherData extends WeatherApi implements Serializable {
 
     private final String DEGREE  = "\u00b0";
-    private JSONObject temp;
-    private JSONArray array, arrayHourly;
+    private transient JSONObject temp;
+    private transient JSONArray array, arrayHourly;
     private String date;
 
     //World weather online API
@@ -31,7 +27,7 @@ public class weatherData extends WeatherApi implements Serializable {
     private double precipMM;
     private String city , state, country, location, windDir, weatherDesc;
 
-    public weatherData(){
+    public WeatherData(){
 
         this.temp = null;
         this.array = null;
@@ -60,7 +56,7 @@ public class weatherData extends WeatherApi implements Serializable {
 
     }
 
-    public weatherData(Boolean check) {
+    public WeatherData(Boolean check) {
         try {
 
             if (!check || check) {
@@ -173,6 +169,10 @@ public class weatherData extends WeatherApi implements Serializable {
 
     public void setArrayHourly(){
         arrayHourly = getTemp().getJSONObject("data").getJSONArray("weather").getJSONObject(0).getJSONArray("hourly");
+    }
+
+    public void setArrayHourly(JSONArray jsarray){
+        this.arrayHourly = jsarray;
     }
 
     public JSONArray getArrayHourly(){
@@ -420,9 +420,17 @@ public class weatherData extends WeatherApi implements Serializable {
         setWindDir();setWindSpeedKmph();setWindSpeedMiles();setWeatherDesc();setPrecipMM();
     }
 
+    public void setData(){
+
+        setTempC();setWindChillC();setFeelsLikeC();
+        setTempF();setWindChillF();setFeelsLikeF();
+        setWindDir();setWindSpeedKmph();setWindSpeedMiles();setWeatherDesc();setPrecipMM();
+
+    }
+
     public static void main(String[] args){
 
-        weatherData temp1 = new weatherData(false);
+        WeatherData temp1 = new WeatherData(false);
 }
 
 }
