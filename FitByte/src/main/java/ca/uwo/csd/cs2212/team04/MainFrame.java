@@ -1,148 +1,283 @@
 package ca.uwo.csd.cs2212.team04;
 
+import java.awt.Color;
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Image;
-
-import javax.swing.JFrame;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-
-import java.awt.BorderLayout;
+import java.awt.Toolkit;
+import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.InputVerifier;
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.JButton;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
+import javax.swing.border.CompoundBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+
 import javax.swing.*;
-import java.awt.Font;
+
 import java.io.IOException;
+
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import java.util.*;
 
+import org.jdatepicker.impl.DateComponentFormatter;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
+import org.jfree.chart.axis.SymbolAxis;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+
+
 /**
- * This class generates GUI of FightByte application 
+ * This class generates GUI of FightByte application
+ * 
  * @author cs2212_w2016_team04
  */
 public class MainFrame {
 
 	/**
-	 * Attribute declarations 
+	 * Attribute declarations
 	 */
 	public JFrame frame;
-	private JTextField user_name;
-	private JTextField pass_word;
-	public JLabel lblClock;
+
 	private JPanel Login;
-	private JPanel Dashboard;
+	private JTextField user_name;
+	private JLabel lblSignUp;
+	private JTextField pass_word;
+	private JLabel lblForgotPassword;
+	private JButton btnLogin;
+	private JLabel lblFightbyte;
+	private JLabel lblPassword;
+	private JLabel lblUsername;
+	private JLabel lblClock;
+	private Font loginFont = new Font("Times New Roman", Font.BOLD, 18);
+
 	private JPanel Timeseries;
+	private JEditorPane txtHeartRateZone;
+	private JTable HeartRate;
+	public JFreeChart graph;
+	public ChartPanel chart_panel;
+	private XYSeries step_series;
+	private XYSeries calories_series;
+	private XYSeries distance_series;
+	private XYSeries heartrate_series;
+	private Border border = BorderFactory.createLineBorder(Color.BLACK, 1);
+	private Font graph_title = new Font("Times New Roman", Font.BOLD, 18);
+	private Font graph_axis = new Font("Times New Roman", Font.PLAIN, 12);
+	private Color txtColor = Color.BLACK;
+	private JScrollPane hrzScroll;
+	private int[] distanceValue;
+
 	private JPanel Preference;
-	private JTable BestPerf;
-	private JTable LifeTotal;
-	private JTextField txtThisWillBe;
-	private JTextField txtHeartRateZone;
-	private JTextField txtDashboardPreference;
-	private JTextField txtSelfDefineGoal;
-	private JTextField txtDailyGoal;
-	private JTextField txtEditTheLook;
-	private JTextField txtYearMonthDay;
+	private JLabel DG_setup, Step_setup, Floor_setup, Distance_setup,
+			Calories_setup, SMinute_setup, AMinute_setup;
+	private JTextField DG_Step_setup, DG_Floor_setup, DG_Distance_setup,
+			DG_Calories_setup, DG_SMinute_setup, DG_AMinute_setup;
+	private JButton dg_button;
+
+	private JPanel Dashboard;
+	private int FCX = 20; // first column x-coordinate
+	private int CD = 140; // distance between columns
+	private int FRY = 65; // first row y-coordinate
+	private int txtDist = 60; // distance between text and the picture
+	private int SRY = 220; // second row y-coordinate
+	private JLabel txtYearMonthDay, lblStep, lblDistance, lblSMinute, lblFloor,
+			lblCalories, lblAMinute, lastUpdate;
+	private JLabel StepCount, Distance, SMinute, Floor, Calories, AMinute;
+	private JTable bestPerf;
+	private JTable lifeTotal;
+	private Font generalFont = new Font("Times New Roman", Font.BOLD, 13);
+	private Font tableFont = new Font("Times New Roman", Font.BOLD, 15);
+	private int frameWidth = 678;
+	private int frameHeight = 382;
+	private JDatePanelImpl date_Panel;
+	private JDatePickerImpl datePicker;
+	private JProgressBar bar_Step, bar_Distance, bar_SMinute, bar_Floor,
+			bar_Calories, bar_AMinute;
+	private int DG_Step = 100;
+	private int DG_Distance, DG_SMinute, DG_AMinute, DG_Floor, DG_Calories;
+	private String[][] lifetotal, bestday;
+	private String[] title;
+
+	private Color gridColor, labelColor, btnColor, barColor, backgroundColor;
+	final Color setPink = new Color(250, 180, 180);
+	final Color darkRed = new Color(204, 0, 0);
+	final Color setBlue = new Color(135, 230, 232);
+	final Color darkBlue = new Color(0, 0, 102);
+	final Color setGreen = new Color(153, 212, 114);
+	final Color darkGreen = new Color(0, 102, 0);
+	final Color setPurple = new Color(68, 34, 112);
+	final Color setYellow = new Color(255, 255, 102);
+	final Color darkYellow = new Color(153, 76, 0);
+
+	static Settings setting;
+	private String colorTheme;
+
 	private Userdata newSession;
 
 	/**
 	 * Launch the application.
 	 */
-	// public static void main(String[] args) {
-	// 	EventQueue.invokeLater(new Runnable() {
- //            /**
- //             * run the main frame and set the window to be visible
- //             */
-	// 		public void run() {
-	// 			try {
-	// 				MainFrame window = new MainFrame();
-	// 				window.frame.setVisible(true);
-	// 			}
-	// 			//catch the exception, and 
-	// 			//prints this throwable and its backtrace to the standard error stream.
-	// 			catch (Exception e) {
-	// 				e.printStackTrace();
-	// 			}
-	// 		}
-	// 	});
-	// }
+/*
+	public static void main(String[] args) {
 
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					setting = new Settings();
+					MainFrame window = new MainFrame(true, setting);
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+*/
 	/**
 	 * Constructor creates MainFrame object
 	 */
-	public MainFrame(boolean fakeData) {
+	public MainFrame(boolean fakeData) throws Exception {
+		setting = new Settings();
+		
 		// initialize the contents of the frame
 		newSession = new Userdata(fakeData);
+
+		colorTheme = setting.getColorTheme();
+
+		if (colorTheme.equals("western")) {
+			backgroundColor = setPurple;
+			labelColor = Color.white;
+			gridColor = Color.white;
+			txtColor = Color.white;
+			barColor = Color.gray;
+		} else if (colorTheme.equals("spring")) {
+			backgroundColor = setGreen;
+			labelColor = darkGreen;
+			gridColor = darkGreen;
+			txtColor = darkGreen;
+			barColor = darkGreen;
+		} else if (colorTheme.equals("summer")) {
+			backgroundColor = setPink;
+			labelColor = darkRed;
+			gridColor = darkRed;
+			txtColor = darkRed;
+			barColor = darkRed;
+		} else if (colorTheme.equals("fall")) {
+			backgroundColor = setYellow;
+			labelColor = darkYellow;
+			gridColor = darkYellow;
+			txtColor = darkYellow;
+			barColor = darkYellow;
+		} else if (colorTheme.equals("winter")) {
+			backgroundColor = setBlue;
+			labelColor = darkBlue;
+			gridColor = darkBlue;
+			txtColor = darkBlue;
+			barColor = darkBlue;
+		} else {
+			backgroundColor = null;
+			labelColor = Color.black;
+			gridColor = Color.black;
+			txtColor = Color.black;
+			barColor = null;
+		}
+
 		initialize();
-		// add a clock on the panel
 		clock();
-
-
 	}
 
 	/**
 	 * clock method adds a clock on the panel
 	 */
-	public void clock(){
-		//create an new thread object clock
-		Thread clock = new Thread(){
+	public void clock() {
+		Thread clock = new Thread() {
 			/**
-			 * If this thread was constructed using a separate Runnable run object, 
-			 * then that Runnable object's run method is called
+			 * If this thread was constructed using a separate Runnable run
+			 * object, then that Runnable object's run method is called
 			 */
-			public void run(){
-				try{
-					while(true){
-						//Gets a calendar using the default time zone and locale.
+			public void run() {
+				try {
+					while (true) {
+						// Gets a calendar using the default time zone and
+						// locale.
 						Calendar time = Calendar.getInstance();
-						//Returns a Date object representing this Calendar's time value 
-						String msg = new String (time.getTime().toString());
+						// Returns a Date object representing this Calendar's
+						// time value
+						String msg = new String(time.getTime().toString());
 						lblClock.setText(msg);
-					    //Causes the currently executing thread to sleep 
+						// Causes the currently executing thread to sleep
 						sleep(1000);
 					}
-				} 
-				 //catch the exception when the clock thread is waiting, sleeping, 
-				//or otherwise occupied, and the thread is interrupted, either before or during the activity.
-				 catch (InterruptedException ee){
+				} catch (InterruptedException ee) {
 					ee.printStackTrace();
 				}
 			}
 		};
-		//Causes the clock thread to begin execution
+		// Causes the clock thread to begin execution
 		clock.start();
 	}
-	
+
 	/**
 	 * initialize method initializes the contents of the frame.
 	 */
 	private void initialize() {
-		//Constructs a new frame with default bound data and be able to exit
+
+		// get the size of user's screen
+		Toolkit kit = Toolkit.getDefaultToolkit();
+		Dimension screenSize = kit.getScreenSize();
+		int screenWidth = (int) screenSize.getWidth();
+		int screenHeight = (int) screenSize.getHeight();
+
+		// set the midpoint of app
+		int midWidth = screenWidth / 2 - frameWidth / 2;
+		int midHeight = screenHeight / 2 - frameHeight / 2;
+
 		frame = new JFrame();
 		frame.setBounds(100, 100, 694, 442);
+		frame.setTitle("FightByte");
+		frame.setBounds(midWidth, midHeight, frameWidth + 18, frameHeight + 70);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		
-		//Creates a new JPanel as the dashboard and registers the text to display in a tool tip
+
+		Image appIcon = kit.getImage("src/main/resources/appIcon.png");
+		frame.setIconImage(appIcon);
+
 		Dashboard = new JPanel();
-		Dashboard.setToolTipText("Best_Performance");
-		Dashboard.setBounds(0, 0, 678, 382);
-		//add dashboard to the main frame
+		Dashboard.setBounds(0, 0, frameWidth, frameHeight);
 		frame.getContentPane().add(Dashboard);
 		Dashboard.setLayout(null);
 		Dashboard.setVisible(false);
-		
-		//Create a JButton object shows "Time Series", 
-		//add it on the dashboard and make it able to receive action
+
 		JButton btnTimeSeries = new JButton("Time Series");
+		btnTimeSeries.setForeground(btnColor);
 		btnTimeSeries.addActionListener(new ActionListener() {
 			/**
 			 * When shows "Time Series" panel, set dashboard to be invisible
-			 * @param e The action event of btnTimeSeries
+			 * 
+			 * @param e
+			 *            The action event of btnTimeSeries
 			 */
 			public void actionPerformed(ActionEvent e) {
 				Dashboard.setVisible(false);
@@ -151,14 +286,15 @@ public class MainFrame {
 		});
 		btnTimeSeries.setBounds(10, 10, 125, 23);
 		Dashboard.add(btnTimeSeries);
-		
-		//Create a JButton object shows "Preference", 
-		//add it on the dashboard and make it able to receive action
+
 		JButton btnPreference = new JButton("Preference");
+		btnPreference.setForeground(btnColor);
 		btnPreference.addActionListener(new ActionListener() {
 			/**
 			 * When shows "Preference" panel, set dashboard to be invisible
-			 * @param e The action event of btnPreference
+			 * 
+			 * @param e
+			 *            The action event of btnPreference
 			 */
 			public void actionPerformed(ActionEvent e) {
 				Dashboard.setVisible(false);
@@ -167,203 +303,213 @@ public class MainFrame {
 		});
 		btnPreference.setBounds(145, 10, 125, 23);
 		Dashboard.add(btnPreference);
-		
-		//Creates a JLabel object Stepcount with the specified text:"Step"
-		//Add 07icon image to the label, add it to the panel and set at proper position
-		JLabel Stepcount = new JLabel("");
-		// Image img = new ImageIcon(this.getClass().getResource("/07icon.jpg")).getImage();
-		// Stepcount.setIcon(new ImageIcon(img));
-		Stepcount.setBounds(51, 79, 100, 100);
-		Dashboard.add(Stepcount);
-		
-		//Creates a JLabel object SMinute
-		//Add 07icon image to the label, add it to the panel and set at proper position
-		JLabel SMinute = new JLabel("");
 
-		// SMinute.setIcon(new ImageIcon(img));
-		SMinute.setBounds(171, 53, 100, 100);
-		Dashboard.add(SMinute);
-		//SMinute.set
-		//Creates a JLabel object Distance
-		//Add 07icon image to the label, add it to the panel and set at proper position
-		JLabel Distance = new JLabel("");
-		// Distance.setIcon(new ImageIcon(img));
-		Distance.setBounds(295, 79, 100, 100);
-		Dashboard.add(Distance);
-		
-		//Creates a JLabel object AMinute
-		//Add 07icon image to the label, add it to the panel and set at proper position
-		JLabel AMinute = new JLabel("");
-		// AMinute.setIcon(new ImageIcon(img));
-		AMinute.setBounds(295, 221, 100, 100);
-		Dashboard.add(AMinute);
-		
-		//Creates a JLabel object Calories
-		//Add 07icon image to the label, add it to the panel and set at proper position
-		JLabel Calories = new JLabel("");
-		// Calories.setIcon(new ImageIcon(img));
-		Calories.setBounds(171, 240, 100, 100);
-		Dashboard.add(Calories);
-		
-		//Creates a JLabel object Floor
-		//Add 07icon image to the label, add it to the panel and set at proper position
-		JLabel Floor = new JLabel("");
-		// Floor.setIcon(new ImageIcon(img));
-		Floor.setBounds(51, 221, 100, 100);
-		Dashboard.add(Floor);
-		
-		//Creates a JLabel object lblStep with context "Step"
-		//add it to the panel and set at proper position
-		JLabel lblStep = new JLabel("Steps: " +newSession.getSteps());
-		lblStep.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		lblStep.setBounds(51, 155, 100, 100);
+		lblStep = new JLabel("");
+		Image img = new ImageIcon("src/main/resources/icon.jpg").getImage();
+		lblStep.setIcon(new ImageIcon(img));
+		lblStep.setBounds(FCX, FRY, 100, 100);
 		Dashboard.add(lblStep);
-		
-		//Creates a JLabel object lblSMinute with context "SMinute"
-		//add it to the panel and set at proper position
-		JLabel lblSMinute = new JLabel("SMinute: " +newSession.getMinutesSedentary());
-		lblSMinute.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		lblSMinute.setBounds(171, 155, 100, 100);
-		Dashboard.add(lblSMinute);
-		
-		//Creates a JLabel object lblDistance with context "Distance"
-		//add it to the panel and set at proper position
-		JLabel lblDistance = new JLabel("Distance: " +newSession.getDistance());
-		lblDistance.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		lblDistance.setBounds(295, 180, 200,200);
+		StepCount = new JLabel();
+		StepCount.setForeground(labelColor);
+		StepCount.setFont(generalFont);
+		StepCount.setBounds(FCX, FRY + txtDist, 100, 100);
+		Dashboard.add(StepCount);
+		bar_Step = new JProgressBar();
+		bar_Step.setStringPainted(true);
+		bar_Step.setForeground(barColor);
+		bar_Step.setBounds(FCX, FRY + 2 * txtDist, 100, 14);
+		Dashboard.add(bar_Step);
+
+		lblDistance = new JLabel("");
+		lblDistance.setIcon(new ImageIcon(img));
+		lblDistance.setBounds(FCX + CD, FRY, 100, 100);
 		Dashboard.add(lblDistance);
-		
-		//Creates a JLabel object lblAMinute with context "AMinute"
-		//add it to the panel and set at proper position
-		JLabel lblAMinute = new JLabel("AMinute: " +newSession.getMinutesFairlyActive());
-		lblAMinute.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		lblAMinute.setBounds(295, 320, 100,100);
-		Dashboard.add(lblAMinute);
-		
-		//Creates a JLabel object lblCalories with context "Calories"
-		//add it to the panel and set at proper position
-		JLabel lblCalories = new JLabel("Calories: " +newSession.getDailyCalories());
-		lblCalories.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		lblCalories.setBounds(150, 320, 100,100);
-		Dashboard.add(lblCalories);
-		
-		//Creates a JLabel object lblFloor with context "Floor"
-		//add it to the panel and set at proper position
-		JLabel lblFloor = new JLabel("Floor: " +newSession.getFloors());
-		lblFloor.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		lblFloor.setBounds(51, 320, 100,100);
+		Distance = new JLabel();
+		Distance.setForeground(labelColor);
+		Distance.setFont(generalFont);
+		Distance.setBounds(FCX + CD, FRY + txtDist, 200, 100);
+		Dashboard.add(Distance);
+		bar_Distance = new JProgressBar();
+		bar_Distance.setStringPainted(true);
+		bar_Distance.setForeground(barColor);
+		bar_Distance.setBounds(FCX + CD, FRY + 2 * txtDist, 100, 14);
+		Dashboard.add(bar_Distance);
+
+		lblSMinute = new JLabel("");
+		lblSMinute.setIcon(new ImageIcon(img));
+		lblSMinute.setBounds(FCX + 2 * CD, FRY, 100, 100);
+		Dashboard.add(lblSMinute);
+		SMinute = new JLabel();
+		SMinute.setForeground(labelColor);
+		SMinute.setFont(generalFont);
+		SMinute.setBounds(FCX + 2 * CD, FRY + txtDist, 200, 100);
+		Dashboard.add(SMinute);
+		bar_SMinute = new JProgressBar();
+		bar_SMinute.setForeground(barColor);
+		bar_SMinute.setStringPainted(true);
+		bar_SMinute.setBounds(FCX + 2 * CD, FRY + 2 * txtDist, 100, 14);
+		Dashboard.add(bar_SMinute);
+
+		lblFloor = new JLabel("");
+		lblFloor.setIcon(new ImageIcon(img));
+		lblFloor.setBounds(FCX, SRY, 100, 100);
 		Dashboard.add(lblFloor);
-		
-		//Creates a JLabel object lblStep with context "Step"
-		//add it to the panel and set at proper position
-		BestPerf = new JTable();
-		BestPerf.setToolTipText("Best Performance");
-		BestPerf.setBounds(440, 67, 205, 133);
-		Dashboard.add(BestPerf);
-		
-		//Creates a JLabel object lblStep with context "Step"
-		//add it to the panel and set at proper position
-		LifeTotal = new JTable();
-		LifeTotal.setToolTipText("Best Performance");
-		LifeTotal.setBounds(440, 216, 205, 133);
-		Dashboard.add(LifeTotal);
-		
-		JSpinner spinner = new JSpinner();
-		spinner.setBounds(422, 35, 69, 22);
-		Dashboard.add(spinner);
-		
-		JSpinner spinner_1 = new JSpinner();
-		spinner_1.setBounds(507, 35, 69, 22);
-		Dashboard.add(spinner_1);
-		
-		JSpinner spinner_2 = new JSpinner();
-		spinner_2.setBounds(586, 35, 69, 22);
-		Dashboard.add(spinner_2);
-		
-		//Create a new JTextField object txtYearMonthDay which can change dates
-		txtYearMonthDay = new JTextField();
-		txtYearMonthDay.setHorizontalAlignment(SwingConstants.CENTER);
-		txtYearMonthDay.setText("     Year           Month               Day");
-		txtYearMonthDay.setBounds(412, 10, 242, 23);
+		Floor = new JLabel();
+		Floor.setForeground(labelColor);
+		Floor.setFont(generalFont);
+		Floor.setBounds(FCX, SRY + txtDist, 100, 100);
+		Dashboard.add(Floor);
+		bar_Floor = new JProgressBar();
+		bar_Floor.setForeground(barColor);
+		bar_Floor.setStringPainted(true);
+		bar_Floor.setBounds(FCX, SRY + 2 * txtDist, 100, 14);
+		Dashboard.add(bar_Floor);
+
+		lblCalories = new JLabel("");
+		lblCalories.setIcon(new ImageIcon(img));
+		lblCalories.setBounds(FCX + CD, SRY, 100, 100);
+		Dashboard.add(lblCalories);
+		Calories = new JLabel();
+		Calories.setForeground(labelColor);
+		Calories.setFont(generalFont);
+		Calories.setBounds(FCX + CD, SRY + txtDist, 100, 100);
+		Dashboard.add(Calories);
+		bar_Calories = new JProgressBar();
+		bar_Calories.setStringPainted(true);
+		bar_Calories.setForeground(barColor);
+		bar_Calories.setBounds(FCX + CD, SRY + 2 * txtDist, 100, 14);
+		Dashboard.add(bar_Calories);
+
+		lblAMinute = new JLabel("");
+		lblAMinute.setIcon(new ImageIcon(img));
+		lblAMinute.setBounds(FCX + 2 * CD, SRY, 100, 100);
+		Dashboard.add(lblAMinute);
+		AMinute = new JLabel();
+		AMinute.setForeground(labelColor);
+		AMinute.setFont(generalFont);
+		AMinute.setBounds(FCX + 2 * CD, SRY + txtDist, 200, 100);
+		Dashboard.add(AMinute);
+		bar_AMinute = new JProgressBar();
+		bar_AMinute.setStringPainted(true);
+		bar_AMinute.setForeground(barColor);
+		bar_AMinute.setBounds(FCX + 2 * CD, SRY + 2 * txtDist, 100, 14);
+		Dashboard.add(bar_AMinute);
+
+		title = new String[] { "", "" };
+		bestday = new String[][] { { "Top Performance", " " }, { "Step", "" },
+				{ "Floor", "" }, { "Distance", "" } };
+		bestPerf = new JTable(bestday, title);
+		bestPerf.setRowSelectionAllowed(false);
+		bestPerf.setEnabled(false);
+		bestPerf.setFont(tableFont);
+		bestPerf.setToolTipText("Best Performance");
+		bestPerf.setOpaque(false);
+		bestPerf.setDefaultRenderer(Object.class,
+				new DefaultTableCellRenderer() {
+					{
+						setOpaque(false);
+					}
+				});
+		bestPerf.setBounds(420, 70, 235, 63);
+		Dashboard.add(bestPerf);
+
+		lifetotal = new String[][] { { "Lifetime Total", " " },
+				{ "Step", "" + newSession.gettotalStep() },
+				{ "Floor", "" + newSession.gettotalFloor() },
+				{ "Distance", "" + newSession.gettotalDistance() } };
+		lifeTotal = new JTable(lifetotal, title);
+		lifeTotal.setEnabled(false);
+		lifeTotal.setRowSelectionAllowed(false);
+		lifeTotal.setOpaque(false);
+		lifeTotal.setDefaultRenderer(Object.class,
+				new DefaultTableCellRenderer() {
+					{
+						setOpaque(false);
+					}
+				});
+		lifeTotal.setFont(tableFont);
+		lifeTotal.setToolTipText("Life Total");
+		lifeTotal.setGridColor(gridColor);
+		lifeTotal.setBorder(new LineBorder(gridColor));
+		lifeTotal.setBounds(420, 155, 235, 63);
+		Dashboard.add(lifeTotal);
+
+		String[] empty = { "", "" };
+		String[][] heartRate = { { "Heart Rate", " " }, { "Peak Zone", "" },
+				{ "Cardio Zone", "" }, { "Fat Burn Zone", "" },
+				{ "Out of Zone", "" }, { "Resting Rate", "" } };
+		HeartRate = new JTable(heartRate, empty);
+		HeartRate.setRowSelectionAllowed(false);
+		HeartRate.setEnabled(false);
+		HeartRate.setFont(tableFont);
+		HeartRate.setOpaque(false);
+		HeartRate.setDefaultRenderer(Object.class,
+				new DefaultTableCellRenderer() {
+					{
+						setOpaque(false);
+					}
+				});
+		HeartRate.setToolTipText("More information on the 'Timseries' Page");
+		HeartRate.setBounds(420, 240, 235, 95);
+		Dashboard.add(HeartRate);
+
+		lastUpdate = new JLabel();
+		lastUpdate.setBounds(420, 350, 230, 20);
+		Dashboard.add(lastUpdate);
+
+		// Create a new JTextField object txtYearMonthDay which can change dates
+		txtYearMonthDay = new JLabel();
+		txtYearMonthDay.setText("Day/ Month/ Year");
+		txtYearMonthDay.setBounds(290, 12, 100, 23);
+		txtYearMonthDay.setForeground(labelColor);
 		Dashboard.add(txtYearMonthDay);
-		txtYearMonthDay.setColumns(10);
-		
-		Dashboard.setVisible(false);
-		
-		Timeseries = new JPanel();
-		Timeseries.setBounds(0, 0, 678, 382);
-		frame.getContentPane().add(Timeseries);
-		Timeseries.setLayout(null);
-		Timeseries.setVisible(false);
-		
-		JButton btnDashboard = new JButton("Dashboard");
-		btnDashboard.addActionListener(new ActionListener() {
-			/**
-			 * When shows "Dashboard" panel, set dashboard to be visible and "Time series" to be invisible"
-			 * @param e The action event of btnTimeSeries
-			 */
+		UtilDateModel dateModel = new UtilDateModel();
+		Calendar time = Calendar.getInstance();
+		dateModel.setDate(time.get(Calendar.YEAR), time.get(Calendar.MONTH),
+				time.get(Calendar.DATE));
+		dateModel.setSelected(true);
+		Properties prop = new Properties();
+		prop.put("text.today", "Today");
+		prop.put("text.month", "Month");
+		prop.put("text.year", "Year");
+		date_Panel = new JDatePanelImpl(dateModel, prop);
+		datePicker = new JDatePickerImpl(date_Panel,
+				new DateComponentFormatter());
+		datePicker.setBorder(new CompoundBorder());
+		datePicker.setBounds(403, 10, 150, 30);
+		datePicker.setButtonFocusable(true);
+		Dashboard.add(datePicker);
+
+		JButton btnRefresh = new JButton("Refresh");
+		btnRefresh.setForeground(btnColor);
+		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Timeseries.setVisible(false);
-				Dashboard.setVisible(true);
+				// fetch new data based on the date information
+				Date chosen_date = (Date) datePicker.getModel().getValue();
+				setting.setUpdate();
+				newSession.setDate(chosen_date);
+				newSession.refreshData();
+				updateData();
 			}
 		});
-		btnDashboard.setBounds(10, 10, 125, 23);
-		Timeseries.add(btnDashboard);
-		
-		JButton btnPreference_1 = new JButton("Preference");
-		btnPreference_1.addActionListener(new ActionListener() {
-			/**
-			 * When shows "Preference" panel, set Preference to be visible and "Time series" to be invisible"
-			 * @param e The action event of btnTimeSeries
-			 */
-			public void actionPerformed(ActionEvent e) {
-				Timeseries.setVisible(false);
-				Preference.setVisible(true);
-			}
-		});
-		btnPreference_1.setBounds(145, 10, 125, 23);
-		Timeseries.add(btnPreference_1);
-		
-		txtThisWillBe = new JTextField();
-		txtThisWillBe.setText("This will be the graphing area");
-		txtThisWillBe.setBounds(10, 95, 477, 277);
-		Timeseries.add(txtThisWillBe);
-		txtThisWillBe.setColumns(10);
-		
-		txtHeartRateZone = new JTextField();
-		txtHeartRateZone.setText("Heart rate zone information");
-		txtHeartRateZone.setBounds(502, 36, 166, 336);
-		Timeseries.add(txtHeartRateZone);
-		txtHeartRateZone.setColumns(10);
-		
-		JRadioButton rdbtnNewRadioButton = new JRadioButton("Step");
-		rdbtnNewRadioButton.setBounds(31, 55, 76, 23);
-		Timeseries.add(rdbtnNewRadioButton);
-		
-		JRadioButton rdbtnCalories = new JRadioButton("Calories");
-		rdbtnCalories.setBounds(109, 55, 76, 23);
-		Timeseries.add(rdbtnCalories);
-		
-		JRadioButton rdbtnHeartRatelong = new JRadioButton("Heart Rate (Long)");
-		rdbtnHeartRatelong.setBounds(187, 55, 139, 23);
-		Timeseries.add(rdbtnHeartRatelong);
-		
-		JRadioButton rdbtnHeartRateshort = new JRadioButton("Heart Rate (Short)");
-		rdbtnHeartRateshort.setBounds(327, 55, 139, 23);
-		Timeseries.add(rdbtnHeartRateshort);
-		Timeseries.setVisible(false);
-		
-		Preference =new JPanel();
-		Preference.setBounds(0, 0, 678, 382);
+		btnRefresh.setBounds(570, 12, 100, 23);
+		Dashboard.add(btnRefresh);
+
+		Preference = new JPanel();
+		Preference.setBounds(0, 0, frameWidth, frameHeight);
 		frame.getContentPane().add(Preference);
 		Preference.setLayout(null);
 		Preference.setVisible(false);
-		
+
 		JButton btnDashboard_1 = new JButton("Dashboard");
+		btnDashboard_1.setForeground(btnColor);
 		btnDashboard_1.addActionListener(new ActionListener() {
 			/**
-			 * When shows "Dashboard" panel, set "Preference" to be invisible and "Dashboard" to be visible"
-			 * @param e The action event of btnTimeSeries
+			 * When shows "Dashboard" panel, set "Preference" to be invisible
+			 * and "Dashboard" to be visible"
+			 * 
+			 * @param e
+			 *            The action event of btnTimeSeries
 			 */
 			public void actionPerformed(ActionEvent e) {
 				Preference.setVisible(false);
@@ -372,12 +518,16 @@ public class MainFrame {
 		});
 		btnDashboard_1.setBounds(10, 10, 123, 23);
 		Preference.add(btnDashboard_1);
-		
+
 		JButton btnTimeseries = new JButton("Timeseries");
+		btnTimeseries.setForeground(btnColor);
 		btnTimeseries.addActionListener(new ActionListener() {
 			/**
-			 * When shows "Timeseries" panel, set "Preference" to be invisible and "Timeseries" to be visible"
-			 * @param e The action event of btnTimeSeries
+			 * When shows "Timeseries" panel, set "Preference" to be invisible
+			 * and "Timeseries" to be visible"
+			 * 
+			 * @param e
+			 *            The action event of btnTimeSeries
 			 */
 			public void actionPerformed(ActionEvent e) {
 				Preference.setVisible(false);
@@ -386,162 +536,621 @@ public class MainFrame {
 		});
 		btnTimeseries.setBounds(143, 10, 125, 23);
 		Preference.add(btnTimeseries);
-		
-		txtDashboardPreference = new JTextField();
-		txtDashboardPreference.setText("Dashboard Preference");
-		txtDashboardPreference.setBounds(10, 43, 328, 157);
-		Preference.add(txtDashboardPreference);
-		txtDashboardPreference.setColumns(10);
-		
-		txtSelfDefineGoal = new JTextField();
-		txtSelfDefineGoal.setText("Self Define Goal");
-		txtSelfDefineGoal.setColumns(10);
-		txtSelfDefineGoal.setBounds(348, 43, 320, 157);
-		Preference.add(txtSelfDefineGoal);
-		
-		txtDailyGoal = new JTextField();
-		txtDailyGoal.setText("Daily Goal");
-		txtDailyGoal.setColumns(10);
-		txtDailyGoal.setBounds(10, 215, 328, 157);
-		Preference.add(txtDailyGoal);
-		
-		txtEditTheLook = new JTextField();
-		txtEditTheLook.setText("Edit The Look");
-		txtEditTheLook.setColumns(10);
-		txtEditTheLook.setBounds(348, 215, 320, 157);
-		Preference.add(txtEditTheLook);
-		
-        /**
-         * Create an new JPanel object Login which shows the login page		
-         */
+
+		DG_setup = new JLabel();
+		DG_setup.setText("Edit Your Daily Goals");
+		DG_setup.setFont(graph_title);
+		DG_setup.setBounds(260, 50, 200, 50);
+		Preference.add(DG_setup);
+
+		Step_setup = new JLabel();
+		Step_setup.setText("Step:");
+		Step_setup.setBounds(240, 100, 100, 30);
+		Preference.add(Step_setup);
+		DG_Step_setup = new JTextField();
+		DG_Step_setup.setEditable(true);
+		DG_Step_setup.setBounds(300, 100, 100, 30);
+		Preference.add(DG_Step_setup);
+
+		Floor_setup = new JLabel();
+		Floor_setup.setText("Floor:");
+		Floor_setup.setBounds(240, 140, 100, 30);
+		Preference.add(Floor_setup);
+		DG_Floor_setup = new JTextField();
+		DG_Floor_setup.setEditable(true);
+		DG_Floor_setup.setBounds(300, 140, 100, 30);
+		Preference.add(DG_Floor_setup);
+
+		Distance_setup = new JLabel();
+		Distance_setup.setText("Distance:");
+		Distance_setup.setBounds(225, 180, 100, 30);
+		Preference.add(Distance_setup);
+		DG_Distance_setup = new JTextField();
+		DG_Distance_setup.setEditable(true);
+		DG_Distance_setup.setBounds(300, 180, 100, 30);
+		Preference.add(DG_Distance_setup);
+
+		Calories_setup = new JLabel();
+		Calories_setup.setText("Calories:");
+		Calories_setup.setBounds(225, 220, 100, 30);
+		Preference.add(Calories_setup);
+		DG_Calories_setup = new JTextField();
+		DG_Calories_setup.setEditable(true);
+		DG_Calories_setup.setBounds(300, 220, 100, 30);
+		Preference.add(DG_Calories_setup);
+
+		SMinute_setup = new JLabel();
+		SMinute_setup.setText("Sedentary Minute:");
+		SMinute_setup.setBounds(180, 260, 150, 30);
+		Preference.add(SMinute_setup);
+		DG_SMinute_setup = new JTextField();
+		DG_SMinute_setup.setEditable(true);
+		DG_SMinute_setup.setBounds(300, 260, 100, 30);
+		Preference.add(DG_SMinute_setup);
+
+		AMinute_setup = new JLabel();
+		AMinute_setup.setText("Active Minute:");
+		AMinute_setup.setBounds(200, 300, 100, 30);
+		Preference.add(AMinute_setup);
+		DG_AMinute_setup = new JTextField();
+		DG_AMinute_setup.setEditable(true);
+		DG_AMinute_setup.setBounds(300, 300, 100, 30);
+		Preference.add(DG_AMinute_setup);
+
+		dg_button = new JButton("Update Daily Goal");
+		dg_button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					int step = Integer.parseInt(DG_Step_setup.getText());
+					int distance = Integer.parseInt(DG_Distance_setup.getText());
+					int calories = Integer.parseInt(DG_Calories_setup.getText());
+					int sminute = Integer.parseInt(DG_SMinute_setup.getText());
+					int aminute = Integer.parseInt(DG_AMinute_setup.getText());
+					int floor = Integer.parseInt(DG_Floor_setup.getText());
+					if (step < 0 || distance < 0 || calories < 0 || sminute < 0
+							|| aminute < 0 || floor < 0) {
+						JOptionPane.showMessageDialog(frame,
+								"Please insert a positive integer. Thank you!",
+								"Friendly Reminder",
+								JOptionPane.WARNING_MESSAGE);
+					} else {
+						setting.setDG_Step(step);
+						setting.setDG_Distance(distance);
+						setting.setDG_Calories(calories);
+						setting.setDG_AMinute(aminute);
+						setting.setDG_SMinute(sminute);
+						setting.setDG_Floor(floor);
+						setting.setUpdate();
+						try {
+							setting.saveSettings();
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						updateData();
+					}
+				} catch (NumberFormatException e3) {
+					JOptionPane.showMessageDialog(frame,
+							"Please insert a valid integer input. Thank you!",
+							"Friendly Reminder", JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		});
+		dg_button.setBounds(420, 300, 200, 30);
+		Preference.add(dg_button);
+
+		Timeseries = new JPanel();
+		Timeseries.setBounds(0, 0, frameWidth, frameHeight);
+		frame.getContentPane().add(Timeseries);
+		Timeseries.setLayout(null);
+		Timeseries.setVisible(false);
+
+		JButton btnDashboard = new JButton("Dashboard");
+		btnDashboard.setForeground(btnColor);
+		btnDashboard.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Timeseries.setVisible(false);
+				Dashboard.setVisible(true);
+			}
+		});
+		btnDashboard.setBounds(10, 10, 125, 23);
+		Timeseries.add(btnDashboard);
+
+		JButton btnPreference_1 = new JButton("Preference");
+		btnPreference_1.setForeground(btnColor);
+		btnPreference_1.addActionListener(new ActionListener() {
+			/**
+			 * When shows "Preference" panel, set Preference to be visible and
+			 * "Time series" to be invisible"
+			 * 
+			 * @param e
+			 *            The action event of btnTimeSeries
+			 */
+			public void actionPerformed(ActionEvent e) {
+				Timeseries.setVisible(false);
+				Preference.setVisible(true);
+			}
+		});
+		btnPreference_1.setBounds(145, 10, 125, 23);
+		Timeseries.add(btnPreference_1);
+
+		//distanceValue = newSession.getDistancevalue();
+		//int[] stepValue = newSession.getStepvalue();
+		//int[] caloriesValue =newSession.getCalories();
+		int[] heartRateValue = newSession.getMinGraph();
+		step_series = new XYSeries("Step");
+		calories_series = new XYSeries("Calories");
+		distance_series = new XYSeries("Distance");
+		heartrate_series = new XYSeries("Heart Rate");
+		for (int i = 0; i < 1440; i++) {
+			//step_series.add(i, stepValue[i]);
+			//calories_series.add(i, caloriesValue[i]);
+			//distance_series.add(i, distanceValue[i]);
+			heartrate_series.add(i, heartRateValue[i]);
+		}
+		XYSeriesCollection dataset_1 = new XYSeriesCollection();
+		dataset_1.addSeries(step_series);
+		XYSeriesCollection dataset_2 = new XYSeriesCollection();
+		dataset_2.addSeries(distance_series);
+		XYSeriesCollection dataset_3 = new XYSeriesCollection();
+		dataset_1.addSeries(calories_series);
+		XYSeriesCollection dataset_4 = new XYSeriesCollection();
+		dataset_2.addSeries(heartrate_series);
+
+		graph = ChartFactory.createTimeSeriesChart("", "Time", "Step Counts",
+				dataset_1, true, true, false);
+		graph.getTitle().setFont(graph_title);
+		graph.setBackgroundPaint(Color.white);
+
+		final XYPlot plot = graph.getXYPlot();
+		/*domain.setTickUnit(new NumberTickUnit(2));
+		domain.setRange(0, 1440);
+		domain.setUpperBound(500);
+		domain.setLowerBound(0);
+		*/
+		plot.setBackgroundPaint(Color.lightGray);
+		plot.setDomainGridlinePaint(Color.white);
+		plot.getDomainAxis().setTickLabelFont(graph_axis);
+		plot.getRangeAxis().setTickLabelFont(graph_axis);
+		plot.setRangeGridlinePaint(Color.lightGray);
+		NumberAxis axis_distance = new NumberAxis("Distance");
+		axis_distance.setTickLabelFont(graph_axis);
+		axis_distance.setAutoRangeIncludesZero(false);
+		plot.setRangeAxis(1, axis_distance);
+		plot.setDataset(1, dataset_2);
+		plot.mapDatasetToRangeAxis(1, 1);
+/*
+		NumberAxis axis_calories = new NumberAxis("Calories");
+		axis_calories.setTickLabelFont(graph_axis);
+		axis_calories.setAutoRangeIncludesZero(false);
+		plot.setRangeAxis(2, axis_calories);
+		plot.setDataset(2, dataset_3);
+		plot.mapDatasetToRangeAxis(2, 2);
+
+		NumberAxis axis_heartrate = new NumberAxis("Heart Rate");
+		axis_heartrate.setTickLabelFont(graph_axis);
+		axis_heartrate.setAutoRangeIncludesZero(false);
+		plot.setRangeAxis(3, axis_heartrate);
+		plot.setDataset(3, dataset_4);
+		plot.mapDatasetToRangeAxis(3, 3);
+		XYLineAndShapeRenderer render_heartrate = new XYLineAndShapeRenderer();
+		render_heartrate.setSeriesPaint(0, Color.GREEN);
+		render_heartrate.setSeriesShapesVisible(0, false);
+		plot.setRenderer(3, render_heartrate);
+		*/
+		chart_panel = new ChartPanel(graph);
+		chart_panel.setBounds(10, 50, 435, 320);
+		chart_panel.setMouseWheelEnabled(true);
+		Timeseries.add(chart_panel);
+		txtHeartRateZone = new JEditorPane("text/html", "");
+		txtHeartRateZone.setOpaque(false);
+		txtHeartRateZone.setEditable(false);
+		txtHeartRateZone
+				.setText("<u><b>What Are Heart Rate Zones?</u></b><br>"
+						+ "Heart rate zones can help you optimize your workout by targeting different training intensities. The default zones are calculated using your estimated maximum heart rate. Fitbit calculates your maximum heart rate with the common formula of 220 minus your age. The illustrations below provide examples for each zone.<br>"
+						+ "<u><b>Peak Zone</u></b><br>"
+						+ "Your heart rate is greater than 85% of maximum, is the high-intensity exercise zone. The peak zone is for short intense sessions that improve performance and speed.<br>"
+						+ "<u><b>Cardio Zone</u></b><br>"
+						+ "Your heart rate is 70 to 84% of maximum, is the medium-to-high intensity exercise zone. In this zone, you're pushing yourself but not straining. For most people, this is the exercise zone to target.<br>"
+						+ "<u><b>Fat Burned Zone</u></b><br>"
+						+ "Your heart rate is 70 to 84% of maximum, is the medium-to-high intensity exercise zone. In this zone, you're pushing yourself but not straining. For most people, this is the exercise zone to target.<br>"
+						+ "<u><b>Out of Zone</u></b><br>"
+						+ "Your heart rate is below 50% of maximum, your heart rate may still be elevated but not enough to be considered exercise.");
+		hrzScroll = new JScrollPane(txtHeartRateZone,
+				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		hrzScroll.getViewport().setOpaque(false);
+		hrzScroll.setForeground(txtColor);
+		txtHeartRateZone.setForeground(txtColor);
+		hrzScroll.setBounds(455, 50, 215, 320);
+		Timeseries.add(hrzScroll);
+
 		Login = new JPanel();
-		Login.setBounds(0, 0, 678, 382);
+		Login.setBounds(0, 0, frameWidth, frameHeight);
 		frame.getContentPane().add(Login);
 		Login.setLayout(null);
-		
-		//Display the clock on the login page
+
 		lblClock = new JLabel("Clock");
 		lblClock.setBounds(10, 10, 412, 22);
 		Login.add(lblClock);
-		lblClock.setFont(new Font("Times New Roman", Font.BOLD, 18));
-		
-		//Create a JLabel object lblSignUp with contect "Sign Up" which can connect to the next page
-		JLabel lblSignUp = new JLabel("Sign Up");
+		lblClock.setFont(loginFont);
+
+		lblSignUp = new JLabel("Sign Up");
 		lblSignUp.setBounds(359, 308, 95, 15);
 		Login.add(lblSignUp);
-		
-		//create a JLabel object lblForgotPassword with contect "Forgot Password?"
-		JLabel lblForgotPassword = new JLabel("Forgot Password?");
+
+		lblForgotPassword = new JLabel("Forgot Password?");
 		lblForgotPassword.setBounds(168, 308, 137, 15);
 		Login.add(lblForgotPassword);
-		
-		//the login button
-		JButton btnLogin = new JButton("Login");
+
+		btnLogin = new JButton("Login");
 		btnLogin.setBounds(471, 247, 95, 47);
 		Login.add(btnLogin);
-		
-		//Creates a place to enter password 
+
 		pass_word = new JTextField();
 		pass_word.setBounds(272, 272, 189, 21);
 		Login.add(pass_word);
 		pass_word.setColumns(10);
-		
-		//Creates a place to enter username 
+
+		// Creates a place to enter username
 		user_name = new JTextField();
 		user_name.setBounds(272, 247, 189, 21);
 		Login.add(user_name);
 		user_name.setColumns(10);
-		
-		//create a JLabel object lblFightbyte to show the title "FightByte"
-		JLabel lblFightbyte = new JLabel("FightByte");
+
+		// create a JLabel object lblFightbyte to show the title "FightByte"
+		lblFightbyte = new JLabel("FightByte");
 		lblFightbyte.setBounds(189, 107, 299, 87);
 		Login.add(lblFightbyte);
 		lblFightbyte.setFont(new Font("Times New Roman", Font.PLAIN, 75));
-		
-		//create a JLabel object lblPassword to display "Password"
-		JLabel lblPassword = new JLabel("Password");
+		lblFightbyte.setForeground(labelColor);
+
+		// create a JLabel object lblPassword to display "Password"
+		lblPassword = new JLabel("Password");
 		lblPassword.setBounds(168, 272, 73, 22);
 		Login.add(lblPassword);
-		lblPassword.setFont(new Font("Times New Roman", Font.BOLD, 18));
-		
-		//create a JLabel object lblUsername to display "Username"
-		JLabel lblUsername = new JLabel("Username");
+		lblPassword.setFont(loginFont);
+
+		// create a JLabel object lblUsername to display "Username"
+		lblUsername = new JLabel("Username");
 		lblUsername.setBounds(168, 244, 77, 22);
 		Login.add(lblUsername);
-		lblUsername.setFont(new Font("Times New Roman", Font.BOLD, 18));
+		lblUsername.setFont(loginFont);
 		btnLogin.addActionListener(new ActionListener() {
 			/**
 			 * actionPerformed method useded to set texts
-			 * @param e A semantic event which indicates that a component-defined action occurred
+			 * 
+			 * @param e
+			 *            A semantic event which indicates that a
+			 *            component-defined action occurred
 			 */
 			public void actionPerformed(ActionEvent e) {
 				String username = user_name.getText();
 				String password = pass_word.getText();
-				/*
-				try{
-					//something for the authentication
-				} catch (IOException wrongInfo){ 
-					JOptionPane.showMessageDialog(null, "Please re-enter your login information. Thank you!");
-				}
-				*/
 				Login.setVisible(false);
 				Dashboard.setVisible(true);
 			}
 		});
-		lblForgotPassword.addMouseListener(new MouseAdapter(){
+		lblForgotPassword.addMouseListener(new MouseAdapter() {
 			/**
-			 *mouseClicked method when click on the "Forgot password", link to the Fitbit forgot passwaord website page
-			 *@param e An event which indicates that a mouse action occurred in a component
+			 * mouseClicked method when click on the "Forgot password", link to
+			 * the Fitbit forgot passwaord website page
+			 *
+			 * @param e
+			 *            An event which indicates that a mouse action occurred
+			 *            in a component
 			 */
-			public void mouseClicked(MouseEvent e){
+			public void mouseClicked(MouseEvent e) {
 				Desktop desktop = Desktop.getDesktop();
 				try {
-					URI uri = new URI("https://www.fitbit.com/login/forgotPassword");
+					URI uri = new URI(
+							"https://www.fitbit.com/login/forgotPassword");
 					desktop.browse(uri);
 				} catch (URISyntaxException e1) {
+					JOptionPane.showMessageDialog(null,
+							"The URL is no Longer Valid");
 					e1.printStackTrace();
-				} catch (IOException ex){
-					//do nothing
+				} catch (IOException ex) {
 				}
 
 			}
 		});
-		lblSignUp.addMouseListener(new MouseAdapter(){
+		lblSignUp.addMouseListener(new MouseAdapter() {
 			/**
-			 *mouseClicked method when click on the "Sign up", link to the Fitbit sign up website page
-			 *@param e An event which indicates that a mouse action occurred in a component
+			 * mouseClicked method when click on the "Sign up", link to the
+			 * Fitbit sign up website page
+			 *
+			 * @param e
+			 *            An event which indicates that a mouse action occurred
+			 *            in a component
 			 */
-			public void mouseClicked(MouseEvent e){
+			public void mouseClicked(MouseEvent e) {
 				Desktop desktop = Desktop.getDesktop();
 				try {
 					URI uri = new URI("https://www.fitbit.com/login");
 					desktop.browse(uri);
 				} catch (URISyntaxException e1) {
+					JOptionPane.showMessageDialog(null,
+							"The URL is no Longer Valid");
 					e1.printStackTrace();
-				} catch (IOException ex){
-					//do nothing
+				} catch (IOException ex) {
+					JOptionPane.showMessageDialog(null,
+							"The URL is no Longer Valid");
 				}
 
 			}
 		});
-		
+
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
-		
+
 		JMenu mnFile = new JMenu("File");
 		menuBar.add(mnFile);
-		
+
 		JMenuItem mntmExit = new JMenuItem("Exit");
 		mntmExit.addActionListener(new ActionListener() {
 			/**
 			 * actionPerformed method useded to exit the application
-			 * @param e A semantic event which indicates that a component-defined action occurred
+			 * 
+			 * @param e
+			 *            A semantic event which indicates that a
+			 *            component-defined action occurred
 			 */
-			//@Override
+			// @Override
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
 		});
 		mnFile.add(mntmExit);
+
+		// create color change menu
+		JMenu mnColor = new JMenu("Theme");
+		menuBar.add(mnColor);
+		JMenuItem western = new JMenuItem("Western");
+		JMenuItem spring = new JMenuItem("Spring");
+		JMenuItem summer = new JMenuItem("Summer");
+		JMenuItem fall = new JMenuItem("Fall");
+		JMenuItem winter = new JMenuItem("Winter");
+		JMenuItem default_theme = new JMenuItem("Default");
+		mnColor.add(western);
+		mnColor.add(spring);
+		mnColor.add(summer);
+		mnColor.add(fall);
+		mnColor.add(winter);
+		mnColor.add(default_theme);
+		western.addActionListener(new ActionListener() {
+			// @Override
+			public void actionPerformed(ActionEvent e) {
+				backgroundColor = setPurple;
+				labelColor = Color.white;
+				gridColor = Color.white;
+				txtColor = Color.white;
+				barColor = Color.gray;
+
+				refreshColor();
+				setting.setColorTheme("western");
+				try {
+					setting.saveSettings();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		spring.addActionListener(new ActionListener() {
+			// @Override
+			public void actionPerformed(ActionEvent e) {
+				backgroundColor = setGreen;
+				labelColor = darkGreen;
+				gridColor = darkGreen;
+				txtColor = darkGreen;
+				barColor = darkGreen;
+
+				refreshColor();
+				setting.setColorTheme("spring");
+				try {
+					setting.saveSettings();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		summer.addActionListener(new ActionListener() {
+			// @Override
+			public void actionPerformed(ActionEvent e) {
+				backgroundColor = setPink;
+				labelColor = darkRed;
+				gridColor = darkRed;
+				txtColor = darkRed;
+				barColor = darkRed;
+
+				refreshColor();
+				setting.setColorTheme("summer");
+				try {
+					setting.saveSettings();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		fall.addActionListener(new ActionListener() {
+			// @Override
+			public void actionPerformed(ActionEvent e) {
+				backgroundColor = setYellow;
+				labelColor = darkYellow;
+				gridColor = darkYellow;
+				txtColor = darkYellow;
+				barColor = darkYellow;
+				refreshColor();
+				setting.setColorTheme("fall");
+				try {
+					setting.saveSettings();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		winter.addActionListener(new ActionListener() {
+			// @Override
+			public void actionPerformed(ActionEvent e) {
+				backgroundColor = setBlue;
+				labelColor = darkBlue;
+				gridColor = darkBlue;
+				txtColor = darkBlue;
+				barColor = darkBlue;
+
+				refreshColor();
+				setting.setColorTheme("winter");
+				try {
+					setting.saveSettings();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+			}
+		});
+		default_theme.addActionListener(new ActionListener() {
+			// @Override
+			public void actionPerformed(ActionEvent e) {
+				backgroundColor = null;
+				labelColor = Color.black;
+				gridColor = Color.black;
+				txtColor = Color.black;
+				barColor = null;
+
+				refreshColor();
+				setting.setColorTheme("default");
+				try {
+					setting.saveSettings();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+
+		setting.setUpdate();
+		refreshColor();
+		updateData();
+
+	}
+
+	public void updateData() {
+		DG_Step = setting.getDG_Step();
+		DG_Floor = setting.getDG_Floor();
+		DG_SMinute = setting.getDG_SMinute();
+		DG_AMinute = setting.getDG_AMinute();
+		DG_Distance = setting.getDG_Distance();
+		DG_Calories = setting.getDG_Calories();
+
+		lastUpdate.setText("Last Updated: " + setting.getUpdate());
+
+		bar_Step.setValue((int) (100 * newSession.getSteps() / DG_Step));
+		bar_Distance
+				.setValue((int) (100 * newSession.getDistance() / DG_Distance));
+		bar_AMinute.setValue((int) (100 * (newSession.getMinutesFairlyActive()
+				+ newSession.getMinutesLightlyActive() + newSession
+				.getMinutesVeryActive()) / DG_AMinute));
+		bar_Calories
+				.setValue((int) (100 * newSession.getDailyCalories() / DG_Calories));
+		bar_Floor.setValue((int) (100 * newSession.getFloors() / DG_Floor));
+		bar_SMinute
+				.setValue((int) (100 * newSession.getMinutesSedentary() / DG_SMinute));
+
+		bar_Step.setToolTipText(newSession.getSteps() + " / " + DG_Step);
+		bar_Distance.setToolTipText(newSession.getDistance() + " / "
+				+ DG_Distance);
+		bar_AMinute.setToolTipText((newSession.getMinutesFairlyActive()
+				+ newSession.getMinutesLightlyActive() + newSession
+					.getMinutesVeryActive()) + " / " + DG_AMinute);
+		bar_SMinute.setToolTipText(newSession.getMinutesSedentary() + " / "
+				+ DG_SMinute);
+		bar_Calories.setToolTipText(newSession.getDailyCalories() + " / "
+				+ DG_Calories);
+		bar_Floor.setToolTipText(newSession.getFloors() + " / " + DG_Floor);
+
+		StepCount.setText("Step: " + newSession.getSteps());
+		Distance.setText("Distance: " + newSession.getDistance());
+		SMinute.setText("SMinute: " + newSession.getMinutesSedentary());
+		Floor.setText("Floor: " + newSession.getFloors());
+		Calories.setText("Calories: " + newSession.getDailyCalories());
+		AMinute.setText("AMinute: "
+				+ (newSession.getMinutesFairlyActive()
+						+ newSession.getMinutesLightlyActive() + newSession
+							.getMinutesVeryActive()));
+
+		DG_Step_setup.setText("" + DG_Step);
+		DG_Floor_setup.setText("" + DG_Floor);
+		DG_Distance_setup.setText("" + DG_Distance);
+		DG_Calories_setup.setText("" + DG_Calories);
+		DG_SMinute_setup.setText("" + DG_SMinute);
+		DG_AMinute_setup.setText("" + DG_AMinute);
+
+		// step - floor - distance
+		bestPerf.setValueAt("" + newSession.getBstep(), 1, 1);
+		bestPerf.setValueAt("" + newSession.getBfloor(), 2, 1);
+		bestPerf.setValueAt("" + newSession.getBdistance(), 3, 1);
+		lifeTotal.setValueAt("" + newSession.gettotalStep(), 1, 1);
+		lifeTotal.setValueAt("" + newSession.gettotalFloor(), 2, 1);
+		lifeTotal.setValueAt("" + newSession.gettotalDistance(), 3, 1);
+		HeartRate.setValueAt("" + newSession.getPeakZone(), 1, 1);
+		HeartRate.setValueAt("" + newSession.getCardioZone(), 2, 1);
+		HeartRate.setValueAt("" + newSession.getFatburnZone(), 3, 1);
+		HeartRate.setValueAt("" + newSession.getOutofZone(), 4, 1);
+		HeartRate.setValueAt("" + newSession.getRestingRate(), 5, 1);
+	}
+
+	public void refreshColor() {
+		Login.setBackground(backgroundColor);
+		Timeseries.setBackground(backgroundColor);
+		Preference.setBackground(backgroundColor);
+		Dashboard.setBackground(backgroundColor);
+
+		user_name.setForeground(txtColor);
+		pass_word.setForeground(txtColor);
+		lblClock.setForeground(txtColor);
+		txtHeartRateZone.setForeground(txtColor);
+		txtHeartRateZone.setBorder(new LineBorder(gridColor));
+		txtYearMonthDay.setForeground(txtColor);
+
+		lblForgotPassword.setForeground(labelColor);
+		lblSignUp.setForeground(labelColor);
+		lblFightbyte.setForeground(labelColor);
+		lblPassword.setForeground(labelColor);
+		lblUsername.setForeground(labelColor);
+		lastUpdate.setForeground(labelColor);
+		StepCount.setForeground(labelColor);
+		Distance.setForeground(labelColor);
+		SMinute.setForeground(labelColor);
+		Floor.setForeground(labelColor);
+		Calories.setForeground(labelColor);
+		AMinute.setForeground(labelColor);
+		bar_Step.setForeground(barColor);
+		bar_Distance.setForeground(barColor);
+		bar_SMinute.setForeground(barColor);
+		bar_Floor.setForeground(barColor);
+		bar_Calories.setForeground(barColor);
+		bar_AMinute.setForeground(barColor);
+
+		DG_setup.setForeground(labelColor);
+		Step_setup.setForeground(labelColor);
+		Floor_setup.setForeground(labelColor);
+		Distance_setup.setForeground(labelColor);
+		Calories_setup.setForeground(labelColor);
+		SMinute_setup.setForeground(labelColor);
+		AMinute_setup.setForeground(labelColor);
+
+		HeartRate.setGridColor(gridColor);
+		bestPerf.setGridColor(gridColor);
+		lifeTotal.setGridColor(gridColor);
+		HeartRate.setBorder(new LineBorder(gridColor));
+		bestPerf.setBorder(new LineBorder(gridColor));
+		lifeTotal.setBorder(new LineBorder(gridColor));
+		HeartRate.setForeground(txtColor);
+		bestPerf.setForeground(txtColor);
+		lifeTotal.setForeground(txtColor);
 	}
 }

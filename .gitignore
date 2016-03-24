@@ -19,3 +19,6 @@ hs_err_pid*
 
 FitByte/src/main/resources/Team4Tokens.txt
 target/
+
+# Settings files
+*.config

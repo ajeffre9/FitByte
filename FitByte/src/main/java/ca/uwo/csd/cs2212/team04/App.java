@@ -24,16 +24,13 @@ package ca.uwo.csd.cs2212.team04;
  * @since       1.0
  */
 
-import java.io.ObjectInputStream;
-import java.io.FileInputStream;
-import java.io.Serializable;
 import java.awt.EventQueue;
 
 
 ////////////////////////////////////////////////////////////////////////////////
 //                              App Class                                     //
 ////////////////////////////////////////////////////////////////////////////////
-public class App implements Serializable {
+public class App {
 
 	/**
 	 * Main class function that calls and creates the necessary objects required
@@ -50,8 +47,8 @@ public class App implements Serializable {
 
 	public static void main(String[] args) throws Exception {
 
-		Settings settings;		// settings required for loading GUI
-		User user;				// user specific data
+		//Settings settings;		// settings required for loading GUI
+		//User user;				// user specific data
 		Api api;				// access to Fitbit API
 		//Test test;			// mock Fitbit API for testing
 
@@ -67,38 +64,9 @@ public class App implements Serializable {
 			}
 		}
 
-		// Load settings from previous settings
-		try {
+		// Load settings from previous settings		
+		// settings = new Settings();
 
-			ObjectInputStream in = new ObjectInputStream(
-					new FileInputStream("settings.config"));
-			settings = (Settings) in.readObject();
-			in.close();
-
-		} catch (Exception e) {
-			// File not present, create a blank settings file
-			settings = new Settings();
-			settings.saveSettings();
-			System.err.println("New settings file created");
-		}
-
-
-		// Test the data writing files
-		Data data_01 = new Data("test");		// create new data file
-		data_01.write("data_01");				// write to file
-		data_01 = null;							// eliminate data file
-
-		// Load data file
-		try {
-			ObjectInputStream in = new ObjectInputStream(
-					new FileInputStream("data_01.data"));
-			data_01 = (Data) in.readObject();
-			in.close();
-		} catch (Exception e) {
-			System.err.println("Data file not found");
-		}
-
-		// data_01.print();						// print value loaded
 
 
 		// Initialize the graphical user interface

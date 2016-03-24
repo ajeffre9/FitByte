@@ -26,44 +26,38 @@ public class Data implements Serializable {
 	 * Application parameters
 	 *
 	 */
-	Date date;
-	String name;
 
-	/**
-	 * Default constructor for the data class.
+	public int windowHeight, windowWidth;
+	public String colorTheme;
+	public Date date;
+
+	// from David
+	public int DG_Step, DG_Distance, DG_SMinute;
+	public int DG_AMinute, DG_Floor, DG_Calories;
+	public String update;
+
+
+	/*
+	 * Default constructor for the data class. Only called if no previous
+	 * settings exist. Settings from a current session are stored in a custom
+	 * serialized file labelled 'settings.config'. Sets all to default.
 	 *
 	 */
-	public Data(String name) {
-		date = new Date();			// Enter todays date
-		this.name = name; 		// Test purposes only
-	}
+	public Data() {
 
+		windowHeight 	= 400;			// Default window height
+		windowWidth 	= 400;			// Default window width
+		colorTheme 		= "default";	// Default windows color theme
 
-	/**
-	 * Write data to file through serialization
-	 *
-	 * @param filename		Filename for the data file to write
-	 */
-	public void write(String filename) {
-
-		try {
-	      	ObjectOutputStream out = new ObjectOutputStream(
-                                     new FileOutputStream(filename + ".data"));
-	      	out.writeObject(this);
-	      	out.close();
-
-		} catch (Exception e) {
-			System.err.println(e + ": failed to save settings");
-		}
-	}
-
-	/**
-	 * Print number for test purposes
-	 *
-	 */
-	public void print() {
-
-		System.err.println(name);
+		DG_Step 		= 100;
+		DG_Distance 	= 100;
+		DG_SMinute 		= 100;
+		DG_AMinute 		= 100;
+		DG_Floor 		= 100;
+		DG_Calories 	= 100;
+	
+		date 	= new Date();
+		update 	= date.toString();
 	}
 
 }

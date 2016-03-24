@@ -12,8 +12,18 @@ package ca.uwo.csd.cs2212.team04;
 
 import java.io.ObjectOutputStream;
 import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.FileInputStream;
 import java.io.Serializable;
 import java.util.Date;
+
+// from David
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Formatter;
+import java.util.Properties;
+import javax.swing.JOptionPane;
 
 ////////////////////////////////////////////////////////////////////////////////
 //                           Settings Class                                   //
@@ -24,30 +34,27 @@ public class Settings implements Serializable {
 	 * Application parameters
 	 *
 	 */
-	private int windowHeight, windowWidth;
-	private int windowPositionX, windowPositionY;
-	private String colorTheme, dashboard;
-	private User user;
-	private Date date;
-
+	private Data data;
 
 	/**
-	 * Default constructor for the settings class. Only called if no previous
-	 * settings exist. Settings from a current session are stored in a custom
-	 * serialized file labelled 'settings.config'. Sets all to default.
+	 * Default constructor for the settings class. 
 	 *
 	 */
-	public Settings() {
+	public Settings() throws Exception {
 
-		windowHeight 	= 400;			// Default window height
-		windowWidth 	= 400;			// Default window width
-		windowPositionX = 400;			// Default window x position
-		windowPositionY = 400;			// Default window y position
-		colorTheme = "default";			// Default windows color theme
-		dashboard  = "default";			// Default dashboard configuration
-
-		//user = new User();			// Create a new user
-		date = new Date();				// Select today as default date
+		// Check for existing settings.config file
+		try {
+			ObjectInputStream in = new ObjectInputStream(
+				new FileInputStream("settings.config"));
+		
+			data = (Data) in.readObject();
+			in.close();
+		} catch (Exception e) {
+			// File not present, create a blank settings file
+			data = new Data();
+			saveSettings();
+			System.err.println("New settings file created");
+		}
 
 	}
 
@@ -61,7 +68,7 @@ public class Settings implements Serializable {
 		try {
 			ObjectOutputStream out = new ObjectOutputStream(
 					new FileOutputStream("settings.config"));
-			out.writeObject(this);
+			out.writeObject(data);
 			out.close();
 
 		} catch (Exception e) {
@@ -76,16 +83,7 @@ public class Settings implements Serializable {
 	 * @return date		Date the settings were saved
 	 */
 	public Date getDate() {
-		return this.date;
-	}
-
-	/**
-	 * Returns the dashboard from the settings class.
-	 *
-	 * @return dashboard	Dashboard arrangement for the GUI
-	 */
-	public String getDashboard() {
-		return this.dashboard;
+		return data.date;
 	}
 
 	/**
@@ -94,16 +92,7 @@ public class Settings implements Serializable {
 	 * @return colorTheme	Color theme for the custom dashboard on the GUI
 	 */
 	public String getColorTheme() {
-		return this.colorTheme;
-	}
-
-	/**
-	 * Returns the user from the settings class.
-	 *
-	 * @return user		User from current session
-	 */
-	public User getUser() {
-		return this.user;
+		return data.colorTheme;
 	}
 
 	/**
@@ -112,7 +101,7 @@ public class Settings implements Serializable {
 	 * @return windowHeight		Window height specified by user
 	 */
 	public int getWindowHeight() {
-		return this.windowHeight;
+		return data.windowHeight;
 	}
 
 	/**
@@ -121,26 +110,74 @@ public class Settings implements Serializable {
 	 * @return windowWidth		Window width specified by user
 	 */
 	public int getWindowWidth() {
-		return this.windowWidth;
+		return data.windowWidth;
 	}
 
 	/**
-	 * Returns the window x position from the settings class.
+	 * Gets the daily goal for steps
 	 *
-	 * @return windowPositionX		Window's x position on desktop
+	 * @return DG_Step			Daily step goal
 	 */
-	public int getWindowPositionX() {
-		return this.windowPositionX;
+	public int getDG_Step() {
+		return data.DG_Step;
 	}
 
 	/**
-	 * Returns the window y position from the settings class.
+	 * Gets the daily goal for distance
 	 *
-	 * @return windowPositionY		Window's y position on desktop
+	 * @return DG_Distance			Daily distance goal
 	 */
-	public int getWindowPositionY() {
-		return this.windowPositionY;
+	public int getDG_Distance() {
+		return data.DG_Distance;
 	}
+
+	/**
+	 * Gets the daily sedimentary minutes
+	 *
+	 * @return DG_SMinutes			Daily lazy minutes
+	 */
+	public int getDG_SMinute() {
+		return data.DG_SMinute;
+	}
+
+	/**
+	 * Gets the daily active minutes 
+	 *
+	 * @return DG_AMinutes			Daily squirrelly moments
+	 */
+	public int getDG_AMinute() {
+		return data.DG_AMinute;
+	}
+
+	/**
+	 * Gets the daily floors climbed goal
+	 *
+	 * @return DG_DFloor			Daily floor goal
+	 */
+	public int getDG_Floor() {
+		return data.DG_Floor;
+	}
+
+	/**
+	 * Gets the daily calories goal
+	 *
+	 * @return DG_Calories			Daily calorie goal
+	 */
+	public int getDG_Calories() {
+		return data.DG_Calories;
+	}
+
+	/**
+	 * Gets the last updated time as a string
+	 *
+	 * @return update			Last time updated
+	 */
+	public String getUpdate() {
+		return data.update;
+	}
+
+
+
 
 	/**
 	 * Sets the date.
@@ -148,16 +185,7 @@ public class Settings implements Serializable {
 	 * @param date			Date passed into by user
 	 */
 	public void setDate(Date date) {
-		this.date = date;
-	}
-
-	/**
-	 * Sets the dashboard configuration.
-	 *
-	 * @param dashboard String passed in by user
-	 */
-	public void setDashboard(String dashboard) {
-		this.dashboard = dashboard;
+		data.date = date;
 	}
 
 	/**
@@ -166,52 +194,72 @@ public class Settings implements Serializable {
 	 * @param colorTheme	String passed into by user
 	 */
 	public void setColorTheme(String colorTheme) {
-		this.colorTheme = colorTheme;
+		data.colorTheme = colorTheme;
+	}
+
+
+	/**
+	 * Sets daily step goals.
+	 *
+	 * @param dG_Step			Daily step goals
+	 */
+	public void setDG_Step(int dG_Step) {
+		data.DG_Step = dG_Step;
 	}
 
 	/**
-	 * Sets the user from the settings class.
+	 * Sets daily distance goals.
 	 *
-	 * @param user		User from current session
+	 * @param dG_Distance			Daily distance goals
 	 */
-	public void setUser(User user) {
-		this.user = user;
+	public void setDG_Distance(int dG_Distance) {
+		data.DG_Distance = dG_Distance;
 	}
 
 	/**
-	 * Sets the window height from the settings class.
+	 * Sets daily lazy minute goals.
 	 *
-	 * @param windowHeight		Window height specified by user
+	 * @param dG_SMinutes			Daily lazy time goals
 	 */
-	public void getWindowHeight(int windowHeight) {
-		this.windowHeight = windowHeight;
+	public void setDG_SMinute(int dG_SMinute) {
+		data.DG_SMinute = dG_SMinute;
 	}
 
 	/**
-	 * Sets the window width from the settings class.
+	 * Sets daily active minute goals.
 	 *
-	 * @param windowWidth		Window width specified by user
+	 * @param dG_AMinutes			Daily squirelly goals
 	 */
-	public void getWindowWidth(int windowWidth) {
-		this.windowWidth = windowWidth;
+	public void setDG_AMinute(int dG_AMinute) {
+		data.DG_AMinute = dG_AMinute;
 	}
 
 	/**
-	 * Sets the window x position from the settings class.
+	 * Sets daily floor climbing goals.
 	 *
-	 * @param windowPositionX		Window's x position on desktop
+	 * @param dG_Floor			Daily floor goals
 	 */
-	public void getWindowPositionX(int windowPositionX) {
-		this.windowPositionX = windowPositionX;
+	public void setDG_Floor(int dG_Floor) {
+		data.DG_Floor = dG_Floor;
 	}
 
 	/**
-	 * Sets the window y position from the settings class.
+	 * Sets daily calorie goals.
 	 *
-	 * @param windowPositionY		Window's y position on desktop
+	 * @param dG_Calories			Daily calorie goals
 	 */
-	public void getWindowPositionY(int windowPositionY) {
-		this.windowPositionY = windowPositionY;
+	public void setDG_Calories(int dG_Calories) {
+		data.DG_Calories = dG_Calories;
+	}
+
+
+	/**
+	 * Sets update to current time.
+	 *
+	 */
+	public void setUpdate() {
+		Date update = new Date();
+		data.update = update.toString();
 	}
 
 
