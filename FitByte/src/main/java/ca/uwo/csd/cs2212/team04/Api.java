@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -21,6 +20,8 @@ import com.github.scribejava.apis.service.FitbitOAuth20ServiceImpl;
 
 import java.awt.Desktop;
 import java.net.URI;
+
+import javax.swing.JOptionPane;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -61,13 +62,13 @@ public class Api
             // File with service credentials.
 
             FileReader fileReader =
-                    new FileReader("FitByte/src/main/resources/Team4Credentials.txt");
+                    new FileReader("src/main/resources/Team4Credentials.txt");
             bufferedReader = new BufferedReader(fileReader);
             clientID= bufferedReader.readLine();
             apiKey= bufferedReader.readLine();
             apiSecret = bufferedReader.readLine();
             bufferedReader.close();
-            fileReader = new FileReader("FitByte/src/main/resources/Team4Tokens.txt");
+            fileReader = new FileReader("src/main/resources/Team4Tokens.txt");
             bufferedReader = new BufferedReader(fileReader);
 
             accessTokenItself = bufferedReader.readLine();
@@ -163,12 +164,13 @@ public class Api
             case 400:
                 System.out.println("Bad Request - may have to talk to Beth");
                 System.out.println("HTTP response body:\n"+response.getBody());
+                JOptionPane.showMessageDialog(null, "Bad Request - may have to talk to Beth");
                 break;
             case 401:
                 System.out.println("Likely Expired Token");
                 System.out.println("HTTP response body:\n"+response.getBody());
                 System.out.println("Try to refresh");
-
+                JOptionPane.showMessageDialog(null, "Likely Expired Token");
                 // This uses the refresh token to get a completely new accessToken object
                 //   See:  https://dev.fitbit.com/docs/oauth2/#refreshing-tokens
                 // This accessToken is now the current one, and the old ones will not work
@@ -188,6 +190,7 @@ public class Api
             case 429:
                 System.out.println("Rate limit exceeded");
                 System.out.println("HTTP response body:\n"+response.getBody());
+                JOptionPane.showMessageDialog(null, "Rate limit exceeded");
                 break;
             default:
                 System.out.println("HTTP response code: "+response.getCode());
@@ -203,7 +206,7 @@ public class Api
         try {
             FileWriter fileWriter;
             fileWriter =
-                    new FileWriter("FitByte/src/main/resources/Team4Tokens.txt");
+                    new FileWriter("src/main/resources/Team4Tokens.txt");
             bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.write(accessToken.getToken());
             bufferedWriter.newLine();

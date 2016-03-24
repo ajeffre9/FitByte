@@ -12,7 +12,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.InputVerifier;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JButton;
@@ -20,34 +19,30 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.border.CompoundBorder;
 import javax.swing.table.DefaultTableCellRenderer;
-
 import javax.swing.*;
 
 import java.io.IOException;
-
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.*;
 
 import org.jdatepicker.impl.DateComponentFormatter;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.axis.NumberTickUnit;
-import org.jfree.chart.axis.SymbolAxis;
-import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-
+import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.data.time.Day;
+import org.jfree.data.time.Hour;
+import org.jfree.data.time.Minute;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
-
 
 /**
  * This class generates GUI of FightByte application
@@ -139,28 +134,20 @@ public class MainFrame {
 	/**
 	 * Launch the application.
 	 */
-/*
-	public static void main(String[] args) {
-
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					setting = new Settings();
-					MainFrame window = new MainFrame(true, setting);
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-*/
+	/*
+	 * public static void main(String[] args) {
+	 * 
+	 * EventQueue.invokeLater(new Runnable() { public void run() { try { setting
+	 * = new Settings(); MainFrame window = new MainFrame(true);
+	 * window.frame.setVisible(true); } catch (Exception e) {
+	 * e.printStackTrace(); } } }); }
+	 */
 	/**
 	 * Constructor creates MainFrame object
 	 */
 	public MainFrame(boolean fakeData) throws Exception {
 		setting = new Settings();
-		
+
 		// initialize the contents of the frame
 		newSession = new Userdata(fakeData);
 
@@ -457,7 +444,6 @@ public class MainFrame {
 		lastUpdate.setBounds(420, 350, 230, 20);
 		Dashboard.add(lastUpdate);
 
-		// Create a new JTextField object txtYearMonthDay which can change dates
 		txtYearMonthDay = new JLabel();
 		txtYearMonthDay.setText("Day/ Month/ Year");
 		txtYearMonthDay.setBounds(290, 12, 100, 23);
@@ -674,74 +660,77 @@ public class MainFrame {
 		btnPreference_1.setBounds(145, 10, 125, 23);
 		Timeseries.add(btnPreference_1);
 
-		//distanceValue = newSession.getDistancevalue();
-		//int[] stepValue = newSession.getStepvalue();
-		//int[] caloriesValue =newSession.getCalories();
-		int[] heartRateValue = newSession.getMinGraph();
-		step_series = new XYSeries("Step");
-		calories_series = new XYSeries("Calories");
-		distance_series = new XYSeries("Distance");
-		heartrate_series = new XYSeries("Heart Rate");
-		for (int i = 0; i < 1440; i++) {
-			//step_series.add(i, stepValue[i]);
-			//calories_series.add(i, caloriesValue[i]);
-			//distance_series.add(i, distanceValue[i]);
-			heartrate_series.add(i, heartRateValue[i]);
+		TimeSeriesCollection dataset = new TimeSeriesCollection();
+		TimeSeries distance_series = new TimeSeries("Distance", Minute.class);
+		TimeSeries step_series = new TimeSeries("Step", Minute.class);
+		TimeSeries calories_series = new TimeSeries("Calories", Minute.class);
+		TimeSeries heartRate_series = new TimeSeries("Heart Rate", Minute.class);
+
+		int[] Distancevalue = newSession.getDistanceHourGraph();
+		int[] Stepvalue = newSession.getStepHourGraph();
+		int[] Caloriesvalue = newSession.getCaloriesHourGraph();
+		int[] heartRatevalue = newSession.getHeartRateHourGraph();
+
+		int hl = Distancevalue.length;
+		int track = 0;
+		int minute_track = 0;
+		Day today = new Day();
+		int hour = 0;
+		Minute min;
+
+		Hour h = new Hour(hour, today);
+		while (track < hl) {
+			min = new Minute(minute_track, h);
+			distance_series.add(min, Distancevalue[track]);
+			step_series.add(min, Stepvalue[track]);
+			calories_series.add(min, Caloriesvalue[track]);
+			heartRate_series.add(min, heartRatevalue[track]);
+			if (minute_track >= 60) {
+				minute_track = minute_track - 60;
+				hour++;
+				h = new Hour(hour, today);
+			}
+			minute_track++;
+			track++;
 		}
-		XYSeriesCollection dataset_1 = new XYSeriesCollection();
-		dataset_1.addSeries(step_series);
-		XYSeriesCollection dataset_2 = new XYSeriesCollection();
-		dataset_2.addSeries(distance_series);
-		XYSeriesCollection dataset_3 = new XYSeriesCollection();
-		dataset_1.addSeries(calories_series);
-		XYSeriesCollection dataset_4 = new XYSeriesCollection();
-		dataset_2.addSeries(heartrate_series);
+		
+		dataset.addSeries(distance_series);
+		dataset.addSeries(step_series);
+		dataset.addSeries(calories_series);
+		dataset.addSeries(heartRate_series);
 
-		graph = ChartFactory.createTimeSeriesChart("", "Time", "Step Counts",
-				dataset_1, true, true, false);
-		graph.getTitle().setFont(graph_title);
-		graph.setBackgroundPaint(Color.white);
+		JFreeChart chart = ChartFactory.createTimeSeriesChart("", "Time",
+				"Distance", dataset, true, true, false);
 
-		final XYPlot plot = graph.getXYPlot();
-		/*domain.setTickUnit(new NumberTickUnit(2));
-		domain.setRange(0, 1440);
-		domain.setUpperBound(500);
-		domain.setLowerBound(0);
-		*/
-		plot.setBackgroundPaint(Color.lightGray);
-		plot.setDomainGridlinePaint(Color.white);
-		plot.getDomainAxis().setTickLabelFont(graph_axis);
-		plot.getRangeAxis().setTickLabelFont(graph_axis);
-		plot.setRangeGridlinePaint(Color.lightGray);
-		NumberAxis axis_distance = new NumberAxis("Distance");
-		axis_distance.setTickLabelFont(graph_axis);
-		axis_distance.setAutoRangeIncludesZero(false);
-		plot.setRangeAxis(1, axis_distance);
-		plot.setDataset(1, dataset_2);
+		// get the plot, both axis and the renderer
+		XYPlot plot = (XYPlot) chart.getPlot();
+		//DateAxis xAxis = (DateAxis) plot.getDomainAxis();
+		//NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
+		//XYItemRenderer renderer = plot.getRenderer();
+
+		NumberAxis axis_step = new NumberAxis("Step");
+		axis_step.setTickLabelFont(graph_axis);
+		axis_step.setAutoRangeIncludesZero(false);
+		plot.setRangeAxis(1, axis_step);
 		plot.mapDatasetToRangeAxis(1, 1);
-/*
+
 		NumberAxis axis_calories = new NumberAxis("Calories");
 		axis_calories.setTickLabelFont(graph_axis);
 		axis_calories.setAutoRangeIncludesZero(false);
 		plot.setRangeAxis(2, axis_calories);
-		plot.setDataset(2, dataset_3);
 		plot.mapDatasetToRangeAxis(2, 2);
-
-		NumberAxis axis_heartrate = new NumberAxis("Heart Rate");
-		axis_heartrate.setTickLabelFont(graph_axis);
-		axis_heartrate.setAutoRangeIncludesZero(false);
-		plot.setRangeAxis(3, axis_heartrate);
-		plot.setDataset(3, dataset_4);
+		
+		NumberAxis axis_heartRate = new NumberAxis("Heart Rate");
+		axis_heartRate.setTickLabelFont(graph_axis);
+		axis_heartRate.setAutoRangeIncludesZero(false);
+		plot.setRangeAxis(2, axis_heartRate);
 		plot.mapDatasetToRangeAxis(3, 3);
-		XYLineAndShapeRenderer render_heartrate = new XYLineAndShapeRenderer();
-		render_heartrate.setSeriesPaint(0, Color.GREEN);
-		render_heartrate.setSeriesShapesVisible(0, false);
-		plot.setRenderer(3, render_heartrate);
-		*/
-		chart_panel = new ChartPanel(graph);
+
+		chart_panel = new ChartPanel(chart);
 		chart_panel.setBounds(10, 50, 435, 320);
 		chart_panel.setMouseWheelEnabled(true);
 		Timeseries.add(chart_panel);
+
 		txtHeartRateZone = new JEditorPane("text/html", "");
 		txtHeartRateZone.setOpaque(false);
 		txtHeartRateZone.setEditable(false);
@@ -750,7 +739,6 @@ public class MainFrame {
 						+ "Heart rate zones can help you optimize your workout by targeting different training intensities. The default zones are calculated using your estimated maximum heart rate. Fitbit calculates your maximum heart rate with the common formula of 220 minus your age. The illustrations below provide examples for each zone.<br>"
 						+ "<u><b>Peak Zone</u></b><br>"
 						+ "Your heart rate is greater than 85% of maximum, is the high-intensity exercise zone. The peak zone is for short intense sessions that improve performance and speed.<br>"
-						+ "<u><b>Cardio Zone</u></b><br>"
 						+ "Your heart rate is 70 to 84% of maximum, is the medium-to-high intensity exercise zone. In this zone, you're pushing yourself but not straining. For most people, this is the exercise zone to target.<br>"
 						+ "<u><b>Fat Burned Zone</u></b><br>"
 						+ "Your heart rate is 70 to 84% of maximum, is the medium-to-high intensity exercise zone. In this zone, you're pushing yourself but not straining. For most people, this is the exercise zone to target.<br>"
