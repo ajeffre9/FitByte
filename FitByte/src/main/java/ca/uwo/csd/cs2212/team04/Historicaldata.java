@@ -10,7 +10,7 @@ import java.util.Date;
 /**
  * Created by owner on 2016-03-24.
  */
-public class Historicaldata extends weatherData implements Serializable {
+public class Historicaldata extends WeatherData implements Serializable {
 
     private JSONObject apiResult;
     private String date;
