@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-//                               Fight Byte                                   //
+//                               Fit Byte                                   //
 ////////////////////////////////////////////////////////////////////////////////
 package ca.uwo.csd.cs2212.team04;
 
@@ -45,6 +45,11 @@ public class App {
 
 	private static boolean fakeData;
 
+	/**
+	 * main method
+	 * @param args argument
+	 * @throws Exception error exception
+	 */
 	public static void main(String[] args) throws Exception {
 
 		//Settings settings;		// settings required for loading GUI
@@ -63,11 +68,6 @@ public class App {
 				fakeData = true;
 			}
 		}
-
-		// Load settings from previous settings		
-		// settings = new Settings();
-
-
 
 		// Initialize the graphical user interface
 		EventQueue.invokeLater(new Runnable() {

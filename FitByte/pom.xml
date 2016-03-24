@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ca.uwo.csd.cs2212.team04</groupId>
-    <artifactId>FitByte</artifactId>
+    <artifactId>team4_FitByte</artifactId>
     <packaging> jar </packaging>
     <version>1.0</version>
     <dependencies>
