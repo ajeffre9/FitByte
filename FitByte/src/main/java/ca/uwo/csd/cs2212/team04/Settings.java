@@ -113,32 +113,65 @@ public class Settings implements Serializable {
 		return data.windowWidth;
 	}
 
-
-	// getters
+	/**
+	 * Gets the daily goal for steps
+	 *
+	 * @return DG_Step			Daily step goal
+	 */
 	public int getDG_Step() {
 		return data.DG_Step;
 	}
 
+	/**
+	 * Gets the daily goal for distance
+	 *
+	 * @return DG_Distance			Daily distance goal
+	 */
 	public int getDG_Distance() {
 		return data.DG_Distance;
 	}
 
+	/**
+	 * Gets the daily sedimentary minutes
+	 *
+	 * @return DG_SMinutes			Daily lazy minutes
+	 */
 	public int getDG_SMinute() {
 		return data.DG_SMinute;
 	}
 
+	/**
+	 * Gets the daily active minutes 
+	 *
+	 * @return DG_AMinutes			Daily squirrelly moments
+	 */
 	public int getDG_AMinute() {
 		return data.DG_AMinute;
 	}
 
+	/**
+	 * Gets the daily floors climbed goal
+	 *
+	 * @return DG_DFloor			Daily floor goal
+	 */
 	public int getDG_Floor() {
 		return data.DG_Floor;
 	}
 
+	/**
+	 * Gets the daily calories goal
+	 *
+	 * @return DG_Calories			Daily calorie goal
+	 */
 	public int getDG_Calories() {
 		return data.DG_Calories;
 	}
 
+	/**
+	 * Gets the last updated time as a string
+	 *
+	 * @return update			Last time updated
+	 */
 	public String getUpdate() {
 		return data.update;
 	}
@@ -165,33 +198,65 @@ public class Settings implements Serializable {
 	}
 
 
-
+	/**
+	 * Sets daily step goals.
+	 *
+	 * @param dG_Step			Daily step goals
+	 */
 	public void setDG_Step(int dG_Step) {
 		data.DG_Step = dG_Step;
 	}
 
+	/**
+	 * Sets daily distance goals.
+	 *
+	 * @param dG_Distance			Daily distance goals
+	 */
 	public void setDG_Distance(int dG_Distance) {
 		data.DG_Distance = dG_Distance;
 	}
 
+	/**
+	 * Sets daily lazy minute goals.
+	 *
+	 * @param dG_SMinutes			Daily lazy time goals
+	 */
 	public void setDG_SMinute(int dG_SMinute) {
 		data.DG_SMinute = dG_SMinute;
 	}
 
+	/**
+	 * Sets daily active minute goals.
+	 *
+	 * @param dG_AMinutes			Daily squirelly goals
+	 */
 	public void setDG_AMinute(int dG_AMinute) {
 		data.DG_AMinute = dG_AMinute;
 	}
 
+	/**
+	 * Sets daily floor climbing goals.
+	 *
+	 * @param dG_Floor			Daily floor goals
+	 */
 	public void setDG_Floor(int dG_Floor) {
 		data.DG_Floor = dG_Floor;
 	}
 
+	/**
+	 * Sets daily calorie goals.
+	 *
+	 * @param dG_Calories			Daily calorie goals
+	 */
 	public void setDG_Calories(int dG_Calories) {
 		data.DG_Calories = dG_Calories;
 	}
 
 
-
+	/**
+	 * Sets update to current time.
+	 *
+	 */
 	public void setUpdate() {
 		Date update = new Date();
 		data.update = update.toString();
