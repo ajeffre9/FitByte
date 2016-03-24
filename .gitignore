@@ -22,3 +22,5 @@ target/
 
 # Settings files
 *.config
+*.data
+*.DS_Store
