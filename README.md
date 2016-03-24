@@ -1,6 +1,8 @@
 # Welcome to CS 2212 - Winter 2016 - team04
 
-To get started, you will need to run these commands in your terminal.
+FightByte was developed as a Windows application to link your computer directly to your FitBit accound so that you as a user may access and track your fitness data as you see 'fit'. 
+
+To get started, you will need to open a GitBash terminal on your desktop and run the following commands.
 
 ## Configure Git for the first time
 
@@ -19,15 +21,17 @@ git clone ssh://git@repo.gaul.csd.uwo.ca:7999/cs2212_w2016/team04.git
 
 ## Build the prototype
 
-Make sure you are in the dev branch using "git branch". If not, use git checkout to switch to the dev branch.
+Make sure you are in the DEV branch using "git branch". If not, use git checkout to switch to the dev branch.
 Then pull all the files to your local repository:
 ```
+git fetch
 git pull
 ```
 
-## Build the maven package
+## Compile and build the maven package
 Then pull all the files to your local repository:
 ```
+mvn compile
 mvn package
 ```
 
@@ -42,4 +46,6 @@ java -jar FitByte/target/FitByte-1.0-jar-with-dependencies.jar
 java -jar FitByte/target/FitByte-1.0-jar-with-dependencies.jar test
 ```
 
+## Exit the Program
+To exit the application either navigate to File > Exit or close the window from the exit in the top right corner.
 
