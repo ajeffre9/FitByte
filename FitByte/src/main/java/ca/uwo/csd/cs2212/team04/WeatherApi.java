@@ -4,41 +4,18 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by owner on 2016-03-21.
  */
 public class WeatherApi {
 
-    private final String USER_AGENT = "Mozilla/5.0";
-    private String date; //Should be removed once everything is integrated present in the userData class
-
-    /**
-     *  Set the current date for the day the data is collected
-     */
-    public void setDate(){
-
-        Date dNow = new Date();
-        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
-        date = ft.format(dNow);
-
-    }
-
-    /**
-     * Get the date for the day
-     * @return date
-     */
-    public String getDate(){
-
-        return date;
-
-    }
+    private static final String USER_AGENT = "Mozilla/5.0";
 
     // Getting the weather for a particular place using HTTP GET request
-    private JSONObject sendGet(String requestedURL) throws Exception {
+    public static JSONObject sendGet(String requestedURL){
 
         //read credentials from a file
         BufferedReader bufferedReader=null;
@@ -48,6 +25,12 @@ public class WeatherApi {
 
         //Need to save service credentials for Weather
         String apiKey = null;
+
+        //Response String that is returned from the GET request
+        StringBuffer response = null;
+
+        //
+        int responseCode = 0;
 
         try {
             // File with service credentials.
@@ -87,30 +70,40 @@ public class WeatherApi {
         //The URL from this point is how you ask for different information
         requestUrl = requestUrlPrefix + requestedURL;
 
-        URL obj = new URL(requestUrl);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        try {
+            URL obj = new URL(requestUrl);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-        // optional default is GET
-        con.setRequestMethod("GET");
+            // optional default is GET
+            con.setRequestMethod("GET");
 
-        //add request header
-        con.setRequestProperty("User-Agent", USER_AGENT);
+            //add request header
+            con.setRequestProperty("User-Agent", USER_AGENT);
 
-        int responseCode = con.getResponseCode();
-        System.out.println("\nSending 'GET' request to URL : " + requestUrl);
-        System.out.println("Response Code : " + responseCode);
+            responseCode = con.getResponseCode();
+            System.out.println("\nSending 'GET' request to URL : " + requestUrl);
+            System.out.println("Response Code : " + responseCode);
 
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            response = new StringBuffer();
 
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+
+            in.close();
+
+        }catch(MalformedURLException ex){
+            System.out.println(
+                    "There is something wrong with your request URL\n"
+                            +ex.getMessage());
+
+        }catch(IOException ex){
+            System.out.println(
+                    "Error reading/write file\n"+ex.getMessage());
         }
-        in.close();
-
-
         //initialize
         JSONObject jsonObj = null;
 
@@ -146,7 +139,7 @@ public class WeatherApi {
         WeatherApi http = new WeatherApi();
 
         System.out.println("Testing 1 - Send Http GET request");
-        http.sendGet("London,Ontario,Canada&date=2016-03-01&enddate=2016-03-21&format=json");
+        http.sendGet("London,Ontario,Canada&date=today&format=json");
 
     }
 }

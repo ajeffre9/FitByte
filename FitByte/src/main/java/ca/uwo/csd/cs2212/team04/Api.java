@@ -19,11 +19,7 @@ import com.github.scribejava.core.model.*; //Request Verb
 import com.github.scribejava.core.oauth.OAuth20Service;
 import com.github.scribejava.apis.service.FitbitOAuth20ServiceImpl;
 
-import java.awt.Desktop;
-import java.net.URI;
-
 import org.json.JSONObject;
-import org.json.JSONArray;
 
 /**
  * Example of using access/refresh pair, and authorization credentials
@@ -211,7 +207,7 @@ public class Api
             bufferedWriter.newLine();
             bufferedWriter.write(accessToken.getRefreshToken());
             bufferedWriter.newLine();
-            bufferedWriter.write(accessToken.getExpiresIn().toString() );
+            bufferedWriter.write(accessToken.getExpiresIn().toString());
             bufferedWriter.newLine();
             bufferedWriter.write(accessToken.getRawResponse());
             bufferedWriter.newLine();
@@ -241,6 +237,7 @@ public class Api
 
     public static void main(String[] args){
 
+
         getInfo("activities/floors/date/2016-01-07/1d/1min/time/19:15/19:30.json");
         getInfo("body/log/fat/goal.json");
         getInfo("activities/floors/date/2016-01-07/1d/1min/time/19:15/19:30.json");
@@ -250,6 +247,17 @@ public class Api
         getInfo("profile.json");
         getInfo("activities/minutesSedentary/date/today/1d.json");
         getInfo("activities/tracker/minutesSedentary/date/today/1d.json");
+//        getInfo("activities/floors/date/2016-01-07/1d/1min/time/19:15/19:30.json");
+//        getInfo("body/log/fat/goal.json");
+//        getInfo("activities/floors/date/2016-01-07/1d/1min/time/19:15/19:30.json");
+//        getInfo("activities/tracker/steps/date/2016-01-07/today/1d.json");
+//        getInfo("body/log/weight/date/today.json");
+//        getInfo("activities/date/today.json");
+//        getInfo("profile.json");
+        //getInfo("activities/minutesSedentary/date/today/1d.json");
+        //getInfo("activities/tracker/minutesSedentary/date/today/1d.json");
+        getInfo("activities/heart/date/2016-03-01/1d/1min/time/00:00/00:10.json");
+
 
     }
 

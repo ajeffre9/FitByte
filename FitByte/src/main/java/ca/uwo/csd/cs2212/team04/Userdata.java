@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 /**
  * User Data class that uses the API to get data from the server
@@ -19,12 +20,6 @@ public class Userdata extends Api implements Serializable {
     //Fitbit API variables
     private double dailyCalories, dailyCaloriesBMR, distance;
     private int steps, floors, minutesSedentary, minutesLightlyActive, minutesFairlyActive, minutesVeryActive, elevation;
-
-    //World weather online API
-    private Time uptime; //the time at which the data was last updated
-    private int tempC, tempF, feelsLikec, feelsLikeF, windChillC, windChillf, windSpeedMiles, windSpeedKmph, humidity, chanceofrain, chanceoffog;
-    private float precipMM;
-    private String city , state, country, location;
 
     /**
      * Constructor: Initialize variables using test data or requests data.
@@ -284,161 +279,31 @@ public class Userdata extends Api implements Serializable {
 
     }
 
-    public Time getUptime() {
-        return uptime;
-    }
-
-    public void setUptime() {
-        temp =  getInfo("activities/tracker/distance/date/" +getDate() +"/1d.json");
-        JSONArray array = temp.getJSONArray("activities-tracker-distance");
-        distance += array.getJSONObject(0).getDouble("value");
-        System.out.println(distance);;
-    }
-
-    public int getTempC() {
-        return tempC;
-    }
-
-    public void setTempC(int tempC) {
-        this.tempC = tempC;
-    }
-
-    public int getTempF() {
-        return tempF;
-    }
-
-    public void setTempF(int tempF) {
-        this.tempF = tempF;
-    }
-
-    public int getFeelsLikec() {
-        return feelsLikec;
-    }
-
-    public void setFeelsLikec(int feelsLikec) {
-        this.feelsLikec = feelsLikec;
-    }
-
-    public int getFeelsLikeF() {
-        return feelsLikeF;
-    }
-
-    public void setFeelsLikeF(int feelsLikeF) {
-        this.feelsLikeF = feelsLikeF;
-    }
-
-    public int getWindChillC() {
-        return windChillC;
-    }
-
-    public void setWindChillC(int windChillC) {
-        this.windChillC = windChillC;
-    }
-
-    public int getWindChillf() {
-        return windChillf;
-    }
-
-    public void setWindChillf(int windChillf) {
-        this.windChillf = windChillf;
-    }
-
-    public int getWindSpeedMiles() {
-        return windSpeedMiles;
-    }
-
-    public void setWindSpeedMiles(int windSpeedMiles) {
-        this.windSpeedMiles = windSpeedMiles;
-    }
-
-    public int getWindSpeedKmph() {
-        return windSpeedKmph;
-    }
-
-    public void setWindSpeedKmph(int windSpeedKmph) {
-        this.windSpeedKmph = windSpeedKmph;
-    }
-
-    public int getHumidity() {
-        return humidity;
-    }
-
-    public void setHumidity(int humidity) {
-        this.humidity = humidity;
-    }
-
-    public int getChanceofrain() {
-        return chanceofrain;
-    }
-
-    public void setChanceofrain(int chanceofrain) {
-        this.chanceofrain = chanceofrain;
-    }
-
-    public int getChanceoffog() {
-        return chanceoffog;
-    }
-
-    public void setChanceoffog(int chanceoffog) {
-        this.chanceoffog = chanceoffog;
-    }
-
-    public float getPrecipMM() {
-        return precipMM;
-    }
-
-    public void setPrecipMM(float precipMM) {
-        this.precipMM = precipMM;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
     /**
      *  Refreshes User data
      */
     public void refreshData(){
 
-        this.setDailyCalories();
-        this.setDailyCaloriesBMR();
-        this.setElevation();
-        this.setMinutesFairlyActive();
-        this.setFloors();
-        this.setMinutesSedentary();
-        this.setMinutesVeryActive();
-        this.setMinutesLightlyActive();
-        this.setSteps();
-        this.setDistance();
+        int callcounter = 0;
 
+        try {
+            this.setDailyCalories();
+            this.setDailyCaloriesBMR();
+            this.setElevation();
+            this.setMinutesFairlyActive();
+            this.setFloors();
+            this.setMinutesSedentary();
+            this.setMinutesVeryActive();
+            this.setMinutesLightlyActive();
+            this.setSteps();
+            this.setDistance();
+
+        } catch (Exception ex) {
+            callcounter++;
+            System.out.println("Sorry we are currently experiencing an API error: " + ex.getMessage());
+        } finally {
+
+        }
     }
 
     /**
