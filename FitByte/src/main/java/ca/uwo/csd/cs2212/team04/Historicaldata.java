@@ -13,7 +13,7 @@ import java.util.Date;
 /**
  * Created by owner on 2016-03-24.
  */
-public class Historicaldata extends WeatherData implements Serializable {
+public class Historicaldata extends Weather implements Serializable {
 
     private JSONObject apiResult;
     private JSONArray apiArray;
@@ -26,7 +26,7 @@ public class Historicaldata extends WeatherData implements Serializable {
 
         for(int i = 0; i < getApiArray().length(); i++){
 
-            WeatherData current = new WeatherData();
+            Weather current = new Weather();
             String date = apiResult.getJSONObject("data").getJSONArray("weather").getJSONObject(i).getString("date");
             System.out.println(date);
             current.setArrayHourly(apiResult.getJSONObject("data").getJSONArray("weather").getJSONObject(i).getJSONArray("hourly"));

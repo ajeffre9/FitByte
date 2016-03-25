@@ -15,7 +15,7 @@ import java.util.Date;
 /**
  * Created by owner on 2016-03-23.
  */
-public class WeatherData extends WeatherApi implements Serializable {
+public class Weather extends WeatherApi implements Serializable {
 
     private final String DEGREE  = "\u00b0";
     private transient JSONObject temp;
@@ -27,7 +27,7 @@ public class WeatherData extends WeatherApi implements Serializable {
     private double precipMM;
     private String city , state, country, location, windDir, weatherDesc;
 
-    public WeatherData(){
+    public Weather(){
 
         this.temp = null;
         this.array = null;
@@ -56,7 +56,7 @@ public class WeatherData extends WeatherApi implements Serializable {
 
     }
 
-    public WeatherData(Boolean check) {
+    public Weather(Boolean check) {
         try {
 
             if (!check || check) {
@@ -430,7 +430,7 @@ public class WeatherData extends WeatherApi implements Serializable {
 
     public static void main(String[] args){
 
-        WeatherData temp1 = new WeatherData(false);
+        Weather temp1 = new Weather(false);
     }
 
 }
