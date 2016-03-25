@@ -1,6 +1,6 @@
 # Welcome to CS 2212 - Winter 2016 - team04
 
-FightByte was developed as a Windows application to link your computer directly to your FitBit accound so that you as a user may access and track your fitness data as you see 'fit'. 
+FightByte was developed as a Windows application to link your computer directly to your FitBit accound so that you as a user may access and track your fitness data as you see 'fit'.
 
 To get started, you will need to open a GitBash terminal on your desktop and run the following commands.
 

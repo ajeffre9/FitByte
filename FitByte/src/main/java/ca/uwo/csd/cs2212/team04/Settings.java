@@ -115,7 +115,7 @@ public class Settings implements Serializable {
 	/**
 	 * getDG_Step method returns the DG_Step from the settings class.
 	 *
-	 * @return DG_Step		
+	 * @return DG_Step
 	 */
 	public int getDG_Step() {
 		return data.DG_Step;
@@ -124,7 +124,7 @@ public class Settings implements Serializable {
 	/**
 	 * getDG_Distance method returns the DG_Distance from the settings class.
 	 *
-	 * @return DG_Distance	
+	 * @return DG_Distance
 	 */
 	public int getDG_Distance() {
 		return data.DG_Distance;
@@ -142,7 +142,7 @@ public class Settings implements Serializable {
 	/**
 	 * getDG_AMinute method returns the DG_AMinute from the settings class.
 	 *
-	 * @return DG_AMinute	
+	 * @return DG_AMinute
 	 */
 	public int getDG_AMinute() {
 		return data.DG_AMinute;
@@ -188,8 +188,8 @@ public class Settings implements Serializable {
 
 	/**
 	 * setColorTheme method Sets ColorTheme.
-	 * 
-	 * @param colorTheme the color theme  
+	 *
+	 * @param colorTheme the color theme
 	 */
 	public void setColorTheme(String colorTheme) {
 		data.colorTheme = colorTheme;
@@ -222,7 +222,7 @@ public class Settings implements Serializable {
 
 	/**
 	 * setDG_AMinute method Sets the DG_AMinute.
-	 * 
+	 *
 	 * @param dG_AMinute  daily goal of AMinute
 	 */
 	public void setDG_AMinute(int dG_AMinute) {
