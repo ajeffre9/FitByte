@@ -6,17 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import com.github.scribejava.apis.FitbitApi20;
 import com.github.scribejava.core.builder.ServiceBuilder;
-import com.github.scribejava.core.oauth.OAuthService;
 import com.github.scribejava.core.model.*; //Request Verb
-import com.github.scribejava.core.oauth.OAuth20Service;
 import com.github.scribejava.apis.service.FitbitOAuth20ServiceImpl;
 
 import org.json.JSONObject;
@@ -238,15 +231,6 @@ public class Api
     public static void main(String[] args){
 
 
-        getInfo("activities/floors/date/2016-01-07/1d/1min/time/19:15/19:30.json");
-        getInfo("body/log/fat/goal.json");
-        getInfo("activities/floors/date/2016-01-07/1d/1min/time/19:15/19:30.json");
-        getInfo("activities/tracker/steps/date/2016-01-07/today/1d.json");
-        getInfo("body/log/weight/date/today.json");
-        getInfo("activities/date/today.json");
-        getInfo("profile.json");
-        getInfo("activities/minutesSedentary/date/today/1d.json");
-        getInfo("activities/tracker/minutesSedentary/date/today/1d.json");
 //        getInfo("activities/floors/date/2016-01-07/1d/1min/time/19:15/19:30.json");
 //        getInfo("body/log/fat/goal.json");
 //        getInfo("activities/floors/date/2016-01-07/1d/1min/time/19:15/19:30.json");
@@ -254,9 +238,18 @@ public class Api
 //        getInfo("body/log/weight/date/today.json");
 //        getInfo("activities/date/today.json");
 //        getInfo("profile.json");
-        //getInfo("activities/minutesSedentary/date/today/1d.json");
-        //getInfo("activities/tracker/minutesSedentary/date/today/1d.json");
-        getInfo("activities/heart/date/2016-03-01/1d/1min/time/00:00/00:10.json");
+//        getInfo("activities/minutesSedentary/date/today/1d.json");
+//        getInfo("activities/tracker/minutesSedentary/date/today/1d.json");
+//        getInfo("activities/floors/date/2016-01-07/1d/1min/time/19:15/19:30.json");
+//        getInfo("body/log/fat/goal.json");
+//        getInfo("activities/floors/date/2016-01-07/1d/1min/time/19:15/19:30.json");
+//        getInfo("activities/tracker/steps/date/2016-01-07/today/1d.json");
+//        getInfo("body/log/weight/date/today.json");
+//        getInfo("activities/date/today.json");
+//        getInfo("profile.json");
+//        getInfo("activities/minutesSedentary/date/today/1d.json");
+//        getInfo("activities/tracker/minutesSedentary/date/today/1d.json");
+//        getInfo("activities/heart/date/2016-03-01/1d/1min/time/00:00/00:10.json");
 
 
     }

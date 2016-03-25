@@ -284,8 +284,6 @@ public class Userdata extends Api implements Serializable {
      */
     public void refreshData(){
 
-        int callcounter = 0;
-
         try {
             this.setDailyCalories();
             this.setDailyCaloriesBMR();
@@ -299,7 +297,6 @@ public class Userdata extends Api implements Serializable {
             this.setDistance();
 
         } catch (Exception ex) {
-            callcounter++;
             System.out.println("Sorry we are currently experiencing an API error: " + ex.getMessage());
         } finally {
 

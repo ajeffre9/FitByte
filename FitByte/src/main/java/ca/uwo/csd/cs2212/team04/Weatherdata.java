@@ -431,6 +431,6 @@ public class WeatherData extends WeatherApi implements Serializable {
     public static void main(String[] args){
 
         WeatherData temp1 = new WeatherData(false);
-}
+    }
 
 }
