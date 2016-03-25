@@ -30,14 +30,12 @@ public class Data implements Serializable {
 	public int windowHeight, windowWidth;
 	public String colorTheme;
 	public Date date;
-
-	// from David
 	public int DG_Step, DG_Distance, DG_SMinute;
 	public int DG_AMinute, DG_Floor, DG_Calories;
 	public String update;
 
 
-	/*
+	/**
 	 * Default constructor for the data class. Only called if no previous
 	 * settings exist. Settings from a current session are stored in a custom
 	 * serialized file labelled 'settings.config'. Sets all to default.

@@ -17,10 +17,13 @@ hs_err_pid*
 .idea/
 *.iml
 
-FitByte/src/main/resources/Team4Tokens.txt
 target/
 
-# Settings files
+#Settings Files
+*.java~
 *.config
+*.properties
 *.data
-*.DS_Store
+
+#Mac Book
+.DS_Store

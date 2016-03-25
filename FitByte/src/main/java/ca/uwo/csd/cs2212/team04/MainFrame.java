@@ -3,7 +3,6 @@ package ca.uwo.csd.cs2212.team04;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.Font;
@@ -12,42 +11,33 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.InputVerifier;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JButton;
-import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.border.CompoundBorder;
 import javax.swing.table.DefaultTableCellRenderer;
-
 import javax.swing.*;
 
 import java.io.IOException;
-
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.*;
 
 import org.jdatepicker.impl.DateComponentFormatter;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.axis.NumberTickUnit;
-import org.jfree.chart.axis.SymbolAxis;
-import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
-
+import org.jfree.data.time.Day;
+import org.jfree.data.time.Hour;
+import org.jfree.data.time.Minute;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
 
 /**
  * This class generates GUI of FightByte application
@@ -65,7 +55,7 @@ public class MainFrame {
 	private JTextField user_name;
 	private JLabel lblSignUp;
 	private JTextField pass_word;
-	private JLabel lblForgotPassword;
+	private JLabel lblPrivacyPolicy;
 	private JButton btnLogin;
 	private JLabel lblFightbyte;
 	private JLabel lblPassword;
@@ -74,20 +64,14 @@ public class MainFrame {
 	private Font loginFont = new Font("Times New Roman", Font.BOLD, 18);
 
 	private JPanel Timeseries;
-	private JEditorPane txtHeartRateZone;
+	private JEditorPane txtHeartRateZone, weatherDescription;
 	private JTable HeartRate;
 	public JFreeChart graph;
 	public ChartPanel chart_panel;
-	private XYSeries step_series;
-	private XYSeries calories_series;
-	private XYSeries distance_series;
-	private XYSeries heartrate_series;
-	private Border border = BorderFactory.createLineBorder(Color.BLACK, 1);
 	private Font graph_title = new Font("Times New Roman", Font.BOLD, 18);
 	private Font graph_axis = new Font("Times New Roman", Font.PLAIN, 12);
 	private Color txtColor = Color.BLACK;
 	private JScrollPane hrzScroll;
-	private int[] distanceValue;
 
 	private JPanel Preference;
 	private JLabel DG_setup, Step_setup, Floor_setup, Distance_setup,
@@ -127,7 +111,7 @@ public class MainFrame {
 	final Color darkBlue = new Color(0, 0, 102);
 	final Color setGreen = new Color(153, 212, 114);
 	final Color darkGreen = new Color(0, 102, 0);
-	final Color setPurple = new Color(68, 34, 112);
+	final Color setPurple = new Color(179, 132, 227);
 	final Color setYellow = new Color(255, 255, 102);
 	final Color darkYellow = new Color(153, 76, 0);
 
@@ -135,35 +119,32 @@ public class MainFrame {
 	private String colorTheme;
 
 	private Userdata newSession;
+	private CurrentWeather newWeather;
 
 	/**
 	 * Launch the application.
 	 */
-/*
-	public static void main(String[] args) {
-
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					setting = new Settings();
-					MainFrame window = new MainFrame(true, setting);
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-*/
+	/*
+	 * public static void main(String[] args) {
+	 * 
+	 * EventQueue.invokeLater(new Runnable() { public void run() { try { setting
+	 * = new Settings(); MainFrame window = new MainFrame(true);
+	 * window.frame.setVisible(true); } catch (Exception e) {
+	 * e.printStackTrace(); } } }); }
+	 */
 	/**
 	 * Constructor creates MainFrame object
+	 * 
+	 * @param fakeData  if fakeData is true, then use fake data to test the program
+	 * @throws Exception if error, throw exception
 	 */
 	public MainFrame(boolean fakeData) throws Exception {
 		setting = new Settings();
-		
+
+		newWeather = new CurrentWeather();
+		newWeather.setWeather();
 		// initialize the contents of the frame
 		newSession = new Userdata(fakeData);
-
 		colorTheme = setting.getColorTheme();
 
 		if (colorTheme.equals("western")) {
@@ -304,10 +285,17 @@ public class MainFrame {
 		btnPreference.setBounds(145, 10, 125, 23);
 		Dashboard.add(btnPreference);
 
+		Image imgA = new ImageIcon("src/main/resources/active.png").getImage();
+		Image imgS = new ImageIcon("src/main/resources/sed.png").getImage();
+		Image imgStep = new ImageIcon("src/main/resources/step.png").getImage();
+		Image imgF = new ImageIcon("src/main/resources/floor.png").getImage();
+		Image imgD = new ImageIcon("src/main/resources/distance.png")
+				.getImage();
+		Image imgC = new ImageIcon("src/main/resources/cal.png").getImage();
+
 		lblStep = new JLabel("");
-		Image img = new ImageIcon("src/main/resources/icon.jpg").getImage();
-		lblStep.setIcon(new ImageIcon(img));
-		lblStep.setBounds(FCX, FRY, 100, 100);
+		lblStep.setIcon(new ImageIcon(imgStep));
+		lblStep.setBounds(FCX + 5, FRY, 100, 100);
 		Dashboard.add(lblStep);
 		StepCount = new JLabel();
 		StepCount.setForeground(labelColor);
@@ -321,13 +309,13 @@ public class MainFrame {
 		Dashboard.add(bar_Step);
 
 		lblDistance = new JLabel("");
-		lblDistance.setIcon(new ImageIcon(img));
+		lblDistance.setIcon(new ImageIcon(imgD));
 		lblDistance.setBounds(FCX + CD, FRY, 100, 100);
 		Dashboard.add(lblDistance);
 		Distance = new JLabel();
 		Distance.setForeground(labelColor);
 		Distance.setFont(generalFont);
-		Distance.setBounds(FCX + CD, FRY + txtDist, 200, 100);
+		Distance.setBounds(FCX + CD-15, FRY + txtDist, 125, 100);
 		Dashboard.add(Distance);
 		bar_Distance = new JProgressBar();
 		bar_Distance.setStringPainted(true);
@@ -336,8 +324,8 @@ public class MainFrame {
 		Dashboard.add(bar_Distance);
 
 		lblSMinute = new JLabel("");
-		lblSMinute.setIcon(new ImageIcon(img));
-		lblSMinute.setBounds(FCX + 2 * CD, FRY, 100, 100);
+		lblSMinute.setIcon(new ImageIcon(imgS));
+		lblSMinute.setBounds(FCX + 2 * CD - 15, FRY, 100, 100);
 		Dashboard.add(lblSMinute);
 		SMinute = new JLabel();
 		SMinute.setForeground(labelColor);
@@ -351,7 +339,7 @@ public class MainFrame {
 		Dashboard.add(bar_SMinute);
 
 		lblFloor = new JLabel("");
-		lblFloor.setIcon(new ImageIcon(img));
+		lblFloor.setIcon(new ImageIcon(imgF));
 		lblFloor.setBounds(FCX, SRY, 100, 100);
 		Dashboard.add(lblFloor);
 		Floor = new JLabel();
@@ -366,13 +354,13 @@ public class MainFrame {
 		Dashboard.add(bar_Floor);
 
 		lblCalories = new JLabel("");
-		lblCalories.setIcon(new ImageIcon(img));
-		lblCalories.setBounds(FCX + CD, SRY, 100, 100);
+		lblCalories.setIcon(new ImageIcon(imgC));
+		lblCalories.setBounds(FCX + CD + 10, SRY, 100, 100);
 		Dashboard.add(lblCalories);
 		Calories = new JLabel();
 		Calories.setForeground(labelColor);
 		Calories.setFont(generalFont);
-		Calories.setBounds(FCX + CD, SRY + txtDist, 100, 100);
+		Calories.setBounds(FCX + CD - 15, SRY + txtDist, 150, 100);
 		Dashboard.add(Calories);
 		bar_Calories = new JProgressBar();
 		bar_Calories.setStringPainted(true);
@@ -381,8 +369,8 @@ public class MainFrame {
 		Dashboard.add(bar_Calories);
 
 		lblAMinute = new JLabel("");
-		lblAMinute.setIcon(new ImageIcon(img));
-		lblAMinute.setBounds(FCX + 2 * CD, SRY, 100, 100);
+		lblAMinute.setIcon(new ImageIcon(imgA));
+		lblAMinute.setBounds(FCX + 2 * CD + 5, SRY, 100, 100);
 		Dashboard.add(lblAMinute);
 		AMinute = new JLabel();
 		AMinute.setForeground(labelColor);
@@ -396,7 +384,7 @@ public class MainFrame {
 		Dashboard.add(bar_AMinute);
 
 		title = new String[] { "", "" };
-		bestday = new String[][] { { "Top Performance", " " }, { "Step", "" },
+		bestday = new String[][] { { "Best Day", " " }, { "Step", "" },
 				{ "Floor", "" }, { "Distance", "" } };
 		bestPerf = new JTable(bestday, title);
 		bestPerf.setRowSelectionAllowed(false);
@@ -435,9 +423,9 @@ public class MainFrame {
 		Dashboard.add(lifeTotal);
 
 		String[] empty = { "", "" };
-		String[][] heartRate = { { "Heart Rate", " " }, { "Peak Zone", "" },
-				{ "Cardio Zone", "" }, { "Fat Burn Zone", "" },
-				{ "Out of Zone", "" }, { "Resting Rate", "" } };
+		String[][] heartRate = { { "Heart Rate", " " }, { "Peak", "" },
+				{ "Cardio", "" }, { "Fat Burn", "" }, { "Out of", "" },
+				{ "Resting Rate", "" } };
 		HeartRate = new JTable(heartRate, empty);
 		HeartRate.setRowSelectionAllowed(false);
 		HeartRate.setEnabled(false);
@@ -454,13 +442,12 @@ public class MainFrame {
 		Dashboard.add(HeartRate);
 
 		lastUpdate = new JLabel();
-		lastUpdate.setBounds(420, 350, 230, 20);
+		lastUpdate.setBounds(418, 350, 235, 20);
 		Dashboard.add(lastUpdate);
 
-		// Create a new JTextField object txtYearMonthDay which can change dates
 		txtYearMonthDay = new JLabel();
-		txtYearMonthDay.setText("Day/ Month/ Year");
-		txtYearMonthDay.setBounds(290, 12, 100, 23);
+		txtYearMonthDay.setText("Pick Date");
+		txtYearMonthDay.setBounds(300, 12, 100, 23);
 		txtYearMonthDay.setForeground(labelColor);
 		Dashboard.add(txtYearMonthDay);
 		UtilDateModel dateModel = new UtilDateModel();
@@ -483,8 +470,14 @@ public class MainFrame {
 		JButton btnRefresh = new JButton("Refresh");
 		btnRefresh.setForeground(btnColor);
 		btnRefresh.addActionListener(new ActionListener() {
+			/**
+			 * actionPerformed method used to set texts
+			 * 
+			 * @param e
+			 *            A semantic event which indicates that a
+			 *            component-defined action occurred
+			 */
 			public void actionPerformed(ActionEvent e) {
-				// fetch new data based on the date information
 				Date chosen_date = (Date) datePicker.getModel().getValue();
 				setting.setUpdate();
 				newSession.setDate(chosen_date);
@@ -538,9 +531,9 @@ public class MainFrame {
 		Preference.add(btnTimeseries);
 
 		DG_setup = new JLabel();
-		DG_setup.setText("Edit Your Daily Goals");
+		DG_setup.setText("Edit Daily Goals");
 		DG_setup.setFont(graph_title);
-		DG_setup.setBounds(260, 50, 200, 50);
+		DG_setup.setBounds(265, 50, 250, 50);
 		Preference.add(DG_setup);
 
 		Step_setup = new JLabel();
@@ -581,7 +574,7 @@ public class MainFrame {
 
 		SMinute_setup = new JLabel();
 		SMinute_setup.setText("Sedentary Minute:");
-		SMinute_setup.setBounds(180, 260, 150, 30);
+		SMinute_setup.setBounds(170, 260, 150, 30);
 		Preference.add(SMinute_setup);
 		DG_SMinute_setup = new JTextField();
 		DG_SMinute_setup.setEditable(true);
@@ -590,7 +583,7 @@ public class MainFrame {
 
 		AMinute_setup = new JLabel();
 		AMinute_setup.setText("Active Minute:");
-		AMinute_setup.setBounds(200, 300, 100, 30);
+		AMinute_setup.setBounds(190, 300, 100, 30);
 		Preference.add(AMinute_setup);
 		DG_AMinute_setup = new JTextField();
 		DG_AMinute_setup.setEditable(true);
@@ -599,6 +592,13 @@ public class MainFrame {
 
 		dg_button = new JButton("Update Daily Goal");
 		dg_button.addActionListener(new ActionListener() {
+			/**
+			 * actionPerformed method used to set texts
+			 * 
+			 * @param e
+			 *            A semantic event which indicates that a
+			 *            component-defined action occurred
+			 */
 			public void actionPerformed(ActionEvent e) {
 				try {
 					int step = Integer.parseInt(DG_Step_setup.getText());
@@ -648,6 +648,13 @@ public class MainFrame {
 		JButton btnDashboard = new JButton("Dashboard");
 		btnDashboard.setForeground(btnColor);
 		btnDashboard.addActionListener(new ActionListener() {
+			/**
+			 * actionPerformed method used to set texts
+			 * 
+			 * @param e
+			 *            A semantic event which indicates that a
+			 *            component-defined action occurred
+			 */
 			public void actionPerformed(ActionEvent e) {
 				Timeseries.setVisible(false);
 				Dashboard.setVisible(true);
@@ -674,74 +681,94 @@ public class MainFrame {
 		btnPreference_1.setBounds(145, 10, 125, 23);
 		Timeseries.add(btnPreference_1);
 
-		//distanceValue = newSession.getDistancevalue();
-		//int[] stepValue = newSession.getStepvalue();
-		//int[] caloriesValue =newSession.getCalories();
-		int[] heartRateValue = newSession.getMinGraph();
-		step_series = new XYSeries("Step");
-		calories_series = new XYSeries("Calories");
-		distance_series = new XYSeries("Distance");
-		heartrate_series = new XYSeries("Heart Rate");
-		for (int i = 0; i < 1440; i++) {
-			//step_series.add(i, stepValue[i]);
-			//calories_series.add(i, caloriesValue[i]);
-			//distance_series.add(i, distanceValue[i]);
-			heartrate_series.add(i, heartRateValue[i]);
+		TimeSeriesCollection dataset = new TimeSeriesCollection();
+		TimeSeries distance_series = new TimeSeries("Distance", Minute.class);
+		TimeSeries step_series = new TimeSeries("Step", Minute.class);
+		TimeSeries calories_series = new TimeSeries("Calories", Minute.class);
+		TimeSeries heartRate_series = new TimeSeries("Heart Rate", Minute.class);
+
+		double[] Distancevalue = newSession.getDistanceHourGraph();
+		int[] Stepvalue = newSession.getStepHourGraph();
+		int[] Caloriesvalue = newSession.getCaloriesHourGraph();
+		int[] heartRatevalue = newSession.getHeartRateHourGraph();
+
+		int hl = Distancevalue.length;
+		int track = 0;
+		int minute_track = 0;
+		Day today = new Day();
+		int hour = 0;
+		Minute min;
+
+		Hour h = new Hour(hour, today);
+		while (track < hl) {
+			min = new Minute(minute_track, h);
+			distance_series.add(min, Distancevalue[track]);
+			step_series.add(min, Stepvalue[track]);
+			calories_series.add(min, Caloriesvalue[track]);
+			if (minute_track >= 60) {
+				minute_track = minute_track - 60;
+				hour++;
+				h = new Hour(hour, today);
+			}
+			minute_track++;
+			track++;
 		}
-		XYSeriesCollection dataset_1 = new XYSeriesCollection();
-		dataset_1.addSeries(step_series);
-		XYSeriesCollection dataset_2 = new XYSeriesCollection();
-		dataset_2.addSeries(distance_series);
-		XYSeriesCollection dataset_3 = new XYSeriesCollection();
-		dataset_1.addSeries(calories_series);
-		XYSeriesCollection dataset_4 = new XYSeriesCollection();
-		dataset_2.addSeries(heartrate_series);
+		
+		hl = heartRatevalue.length;
+		track = 0;
+		String startTime = newSession.getFirstTime();
+		hour = Integer.parseInt(startTime.substring(0, 2));
+		h = new Hour(hour, today);
+		minute_track = Integer.parseInt(startTime.substring(3, 5));
+		while (track < hl) {
+			min = new Minute(minute_track, h);
+			heartRate_series.add(min, heartRatevalue[track]);
+			if (minute_track >= 60) {
+				minute_track = minute_track - 60;
+				hour++;
+				h = new Hour(hour, today);
+			}
+			minute_track++;
+			track++;
+		}
 
-		graph = ChartFactory.createTimeSeriesChart("", "Time", "Step Counts",
-				dataset_1, true, true, false);
-		graph.getTitle().setFont(graph_title);
-		graph.setBackgroundPaint(Color.white);
+		dataset.addSeries(distance_series);
+		dataset.addSeries(step_series);
+		dataset.addSeries(calories_series);
+		dataset.addSeries(heartRate_series);
 
-		final XYPlot plot = graph.getXYPlot();
-		/*domain.setTickUnit(new NumberTickUnit(2));
-		domain.setRange(0, 1440);
-		domain.setUpperBound(500);
-		domain.setLowerBound(0);
-		*/
-		plot.setBackgroundPaint(Color.lightGray);
-		plot.setDomainGridlinePaint(Color.white);
-		plot.getDomainAxis().setTickLabelFont(graph_axis);
-		plot.getRangeAxis().setTickLabelFont(graph_axis);
-		plot.setRangeGridlinePaint(Color.lightGray);
-		NumberAxis axis_distance = new NumberAxis("Distance");
-		axis_distance.setTickLabelFont(graph_axis);
-		axis_distance.setAutoRangeIncludesZero(false);
-		plot.setRangeAxis(1, axis_distance);
-		plot.setDataset(1, dataset_2);
+		JFreeChart chart = ChartFactory.createTimeSeriesChart("", "Time",
+				"Distance", dataset, true, true, false);
+
+		// get the plot, both axis and the renderer
+		XYPlot plot = (XYPlot) chart.getPlot();
+		// DateAxis xAxis = (DateAxis) plot.getDomainAxis();
+		// NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
+		// XYItemRenderer renderer = plot.getRenderer();
+
+		NumberAxis axis_step = new NumberAxis("Step");
+		axis_step.setTickLabelFont(graph_axis);
+		axis_step.setAutoRangeIncludesZero(false);
+		plot.setRangeAxis(1, axis_step);
 		plot.mapDatasetToRangeAxis(1, 1);
-/*
+
 		NumberAxis axis_calories = new NumberAxis("Calories");
 		axis_calories.setTickLabelFont(graph_axis);
 		axis_calories.setAutoRangeIncludesZero(false);
 		plot.setRangeAxis(2, axis_calories);
-		plot.setDataset(2, dataset_3);
 		plot.mapDatasetToRangeAxis(2, 2);
 
-		NumberAxis axis_heartrate = new NumberAxis("Heart Rate");
-		axis_heartrate.setTickLabelFont(graph_axis);
-		axis_heartrate.setAutoRangeIncludesZero(false);
-		plot.setRangeAxis(3, axis_heartrate);
-		plot.setDataset(3, dataset_4);
+		NumberAxis axis_heartRate = new NumberAxis("Heart Rate");
+		axis_heartRate.setTickLabelFont(graph_axis);
+		axis_heartRate.setAutoRangeIncludesZero(false);
+		plot.setRangeAxis(2, axis_heartRate);
 		plot.mapDatasetToRangeAxis(3, 3);
-		XYLineAndShapeRenderer render_heartrate = new XYLineAndShapeRenderer();
-		render_heartrate.setSeriesPaint(0, Color.GREEN);
-		render_heartrate.setSeriesShapesVisible(0, false);
-		plot.setRenderer(3, render_heartrate);
-		*/
-		chart_panel = new ChartPanel(graph);
+
+		chart_panel = new ChartPanel(chart);
 		chart_panel.setBounds(10, 50, 435, 320);
 		chart_panel.setMouseWheelEnabled(true);
 		Timeseries.add(chart_panel);
+
 		txtHeartRateZone = new JEditorPane("text/html", "");
 		txtHeartRateZone.setOpaque(false);
 		txtHeartRateZone.setEditable(false);
@@ -776,44 +803,43 @@ public class MainFrame {
 		lblClock.setFont(loginFont);
 
 		lblSignUp = new JLabel("Sign Up");
-		lblSignUp.setBounds(359, 308, 95, 15);
+		lblSignUp.setBounds(250, 308, 95, 15);
 		Login.add(lblSignUp);
 
-		lblForgotPassword = new JLabel("Forgot Password?");
-		lblForgotPassword.setBounds(168, 308, 137, 15);
-		Login.add(lblForgotPassword);
+		lblPrivacyPolicy = new JLabel("Privacy Policy");
+		lblPrivacyPolicy.setBounds(80, 308, 137, 15);
+		Login.add(lblPrivacyPolicy);
 
 		btnLogin = new JButton("Login");
-		btnLogin.setBounds(471, 247, 95, 47);
+		btnLogin.setBounds(330, 247, 95, 47);
 		Login.add(btnLogin);
 
-		pass_word = new JTextField();
-		pass_word.setBounds(272, 272, 189, 21);
+		pass_word = new JTextField("password");
+		pass_word.setBounds(135, 272, 189, 21);
 		Login.add(pass_word);
 		pass_word.setColumns(10);
 
-		// Creates a place to enter username
-		user_name = new JTextField();
-		user_name.setBounds(272, 247, 189, 21);
+		user_name = new JTextField("username");
+		user_name.setBounds(135, 247, 189, 21);
 		Login.add(user_name);
 		user_name.setColumns(10);
 
 		// create a JLabel object lblFightbyte to show the title "FightByte"
 		lblFightbyte = new JLabel("FightByte");
-		lblFightbyte.setBounds(189, 107, 299, 87);
+		lblFightbyte.setBounds(85, 107, 450, 87);
 		Login.add(lblFightbyte);
 		lblFightbyte.setFont(new Font("Times New Roman", Font.PLAIN, 75));
 		lblFightbyte.setForeground(labelColor);
 
 		// create a JLabel object lblPassword to display "Password"
 		lblPassword = new JLabel("Password");
-		lblPassword.setBounds(168, 272, 73, 22);
+		lblPassword.setBounds(10, 272, 122, 22);
 		Login.add(lblPassword);
 		lblPassword.setFont(loginFont);
 
 		// create a JLabel object lblUsername to display "Username"
 		lblUsername = new JLabel("Username");
-		lblUsername.setBounds(168, 244, 77, 22);
+		lblUsername.setBounds(10, 244, 115, 22);
 		Login.add(lblUsername);
 		lblUsername.setFont(loginFont);
 		btnLogin.addActionListener(new ActionListener() {
@@ -825,13 +851,11 @@ public class MainFrame {
 			 *            component-defined action occurred
 			 */
 			public void actionPerformed(ActionEvent e) {
-				String username = user_name.getText();
-				String password = pass_word.getText();
 				Login.setVisible(false);
 				Dashboard.setVisible(true);
 			}
 		});
-		lblForgotPassword.addMouseListener(new MouseAdapter() {
+		lblPrivacyPolicy.addMouseListener(new MouseAdapter() {
 			/**
 			 * mouseClicked method when click on the "Forgot password", link to
 			 * the Fitbit forgot passwaord website page
@@ -843,8 +867,7 @@ public class MainFrame {
 			public void mouseClicked(MouseEvent e) {
 				Desktop desktop = Desktop.getDesktop();
 				try {
-					URI uri = new URI(
-							"https://www.fitbit.com/login/forgotPassword");
+					URI uri = new URI("https://www.fitbit.com/ca/privacy");
 					desktop.browse(uri);
 				} catch (URISyntaxException e1) {
 					JOptionPane.showMessageDialog(null,
@@ -880,6 +903,41 @@ public class MainFrame {
 
 			}
 		});
+
+		/** Add weather */
+		JLabel weatherLabel = new JLabel("");
+		weatherLabel.setBounds(470, 80, 300, 150);
+		if ((newWeather.getWeather()).equals("sun")) {
+			Image imgSun = new ImageIcon("src/main/resources/sun.png")
+					.getImage();
+			weatherLabel.setIcon(new ImageIcon(imgSun));
+		} else if ((newWeather.getWeather()).equals("cloud")) {
+			Image imgCloud = new ImageIcon("src/main/resources/cloud.png")
+					.getImage();
+			weatherLabel.setIcon(new ImageIcon(imgCloud));
+		} else if ((newWeather.getWeather()).equals("rain")) {
+			Image imgRain = new ImageIcon("src/main/resources/rain.png")
+					.getImage();
+			weatherLabel.setIcon(new ImageIcon(imgRain));
+		} else if ((newWeather.getWeather()).equals("snow")) {
+			Image imgSnow = new ImageIcon("src/main/resources/snow.png")
+					.getImage();
+			weatherLabel.setIcon(new ImageIcon(imgSnow));
+		} else {
+			JLabel weatherError = new JLabel("");
+			Login.add(weatherError);
+			System.out.println("Wow you find a new weather!");
+		}
+
+		Login.add(weatherLabel);
+		// JEditorPane
+		weatherDescription = new JEditorPane();
+		weatherDescription.setOpaque(false);
+		weatherDescription.setEditable(false);
+		weatherDescription.setText("" + newWeather.getTemperature()
+				+ (char) 0x00B0 + "C\n" + newWeather.getWeatherDescription());
+		weatherDescription.setBounds(470, 250, 300, 150);
+		Login.add(weatherDescription);
 
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
@@ -919,7 +977,13 @@ public class MainFrame {
 		mnColor.add(winter);
 		mnColor.add(default_theme);
 		western.addActionListener(new ActionListener() {
-			// @Override
+			/**
+			 * actionPerformed method useded to set texts
+			 * 
+			 * @param e
+			 *            A semantic event which indicates that a
+			 *            component-defined action occurred
+			 */
 			public void actionPerformed(ActionEvent e) {
 				backgroundColor = setPurple;
 				labelColor = Color.white;
@@ -939,6 +1003,13 @@ public class MainFrame {
 		});
 		spring.addActionListener(new ActionListener() {
 			// @Override
+			/**
+			 * actionPerformed method used to set texts
+			 * 
+			 * @param e
+			 *            A semantic event which indicates that a
+			 *            component-defined action occurred
+			 */
 			public void actionPerformed(ActionEvent e) {
 				backgroundColor = setGreen;
 				labelColor = darkGreen;
@@ -958,6 +1029,13 @@ public class MainFrame {
 		});
 		summer.addActionListener(new ActionListener() {
 			// @Override
+			/**
+			 * actionPerformed method used to set texts
+			 * 
+			 * @param e
+			 *            A semantic event which indicates that a
+			 *            component-defined action occurred
+			 */
 			public void actionPerformed(ActionEvent e) {
 				backgroundColor = setPink;
 				labelColor = darkRed;
@@ -977,6 +1055,13 @@ public class MainFrame {
 		});
 		fall.addActionListener(new ActionListener() {
 			// @Override
+			/**
+			 * actionPerformed method used to set texts
+			 * 
+			 * @param e
+			 *            A semantic event which indicates that a
+			 *            component-defined action occurred
+			 */
 			public void actionPerformed(ActionEvent e) {
 				backgroundColor = setYellow;
 				labelColor = darkYellow;
@@ -995,6 +1080,13 @@ public class MainFrame {
 		});
 		winter.addActionListener(new ActionListener() {
 			// @Override
+			/**
+			 * actionPerformed method used to set texts
+			 * 
+			 * @param e
+			 *            A semantic event which indicates that a
+			 *            component-defined action occurred
+			 */
 			public void actionPerformed(ActionEvent e) {
 				backgroundColor = setBlue;
 				labelColor = darkBlue;
@@ -1015,6 +1107,13 @@ public class MainFrame {
 		});
 		default_theme.addActionListener(new ActionListener() {
 			// @Override
+			/**
+			 * actionPerformed method used to set texts
+			 * 
+			 * @param e
+			 *            A semantic event which indicates that a
+			 *            component-defined action occurred
+			 */
 			public void actionPerformed(ActionEvent e) {
 				backgroundColor = null;
 				labelColor = Color.black;
@@ -1038,6 +1137,10 @@ public class MainFrame {
 
 	}
 
+	/**
+	 * updateData method used to update data
+	 * 
+	 */
 	public void updateData() {
 		DG_Step = setting.getDG_Step();
 		DG_Floor = setting.getDG_Floor();
@@ -1046,7 +1149,7 @@ public class MainFrame {
 		DG_Distance = setting.getDG_Distance();
 		DG_Calories = setting.getDG_Calories();
 
-		lastUpdate.setText("Last Updated: " + setting.getUpdate());
+		lastUpdate.setText("Update: " + setting.getUpdate());
 
 		bar_Step.setValue((int) (100 * newSession.getSteps() / DG_Step));
 		bar_Distance
@@ -1103,6 +1206,10 @@ public class MainFrame {
 		HeartRate.setValueAt("" + newSession.getRestingRate(), 5, 1);
 	}
 
+	/**
+	 * refreshColor method used to refresh color settings
+	 * 
+	 */
 	public void refreshColor() {
 		Login.setBackground(backgroundColor);
 		Timeseries.setBackground(backgroundColor);
@@ -1115,8 +1222,9 @@ public class MainFrame {
 		txtHeartRateZone.setForeground(txtColor);
 		txtHeartRateZone.setBorder(new LineBorder(gridColor));
 		txtYearMonthDay.setForeground(txtColor);
+		weatherDescription.setForeground(txtColor);
 
-		lblForgotPassword.setForeground(labelColor);
+		lblPrivacyPolicy.setForeground(labelColor);
 		lblSignUp.setForeground(labelColor);
 		lblFightbyte.setForeground(labelColor);
 		lblPassword.setForeground(labelColor);
