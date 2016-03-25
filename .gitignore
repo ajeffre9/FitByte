@@ -19,3 +19,12 @@ hs_err_pid*
 
 FitByte/src/main/resources/Team4Tokens.txt
 target/
+
+#Settings Files
+*.java~
+*.config
+*.properties
+*.data
+
+#Mac Book
+.DS_Store
