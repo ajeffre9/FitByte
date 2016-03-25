@@ -17,7 +17,6 @@ hs_err_pid*
 .idea/
 *.iml
 
-FitByte/src/main/resources/Team4Tokens.txt
 target/
 
 #Settings Files
