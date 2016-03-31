@@ -430,7 +430,7 @@ public class Weather extends WeatherApi implements Serializable {
 
     public static void main(String[] args){
 
-        Weather temp1 = new Weather(false);
+        Weather temp1 = new Weather(true);
     }
 
 }

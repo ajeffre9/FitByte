@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -21,7 +22,8 @@ public class Historicaldata extends Weather implements Serializable {
 
     public Historicaldata(){
 
-        setApiResult(sendGet("London,Ontario,Canada&tp=24&date=2016-03-01&enddate=2016-03-23&format=json"));
+        setDate();
+        setApiResult(sendGet("London,Ontario,Canada&tp=24&date=2016-03-01&enddate=" +getDate() +"&format=json"));
         setApiArray();
 
         for(int i = 0; i < getApiArray().length(); i++){
@@ -55,9 +57,10 @@ public class Historicaldata extends Weather implements Serializable {
      */
     public void setDate(){
 
-        Date dNow = new Date();
-        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
-        date = ft.format(dNow);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+        date = dateFormat.format(cal.getTime());
 
     }
 
