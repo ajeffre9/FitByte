@@ -52,11 +52,6 @@ public class App {
 	 */
 	public static void main(String[] args) throws Exception {
 
-		//Settings settings;		// settings required for loading GUI
-		//User user;				// user specific data
-		Api api;				// access to Fitbit API
-		//Test test;			// mock Fitbit API for testing
-
 		fakeData = false;
 
 		// Read whether input arguments are present for test case
@@ -86,7 +81,6 @@ public class App {
 				}
 			}
 		});
-
 	}
 
 
